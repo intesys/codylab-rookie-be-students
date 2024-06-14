@@ -2,8 +2,11 @@ package it.intesys.rookie.service;
 
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.dto.DoctorDTO;
+import it.intesys.rookie.dto.DoctorFilterDTO;
 import it.intesys.rookie.dto.DoctorMapper;
 import it.intesys.rookie.repository.DoctorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,9 +24,6 @@ public class DoctorService {
 
     public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
-
-        Instant now = Instant.now();
-        doctor.setLastAdmission(now);
 
         doctor = doctorRepository.save(doctor);
         doctorDTO = doctorMapper.toDataTransferObject(doctor);
@@ -46,9 +46,6 @@ public class DoctorService {
         doctorDTO.setId(id);
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
 
-        Instant now = Instant.now();
-        doctor.setLastAdmission(now);
-
         doctor = doctorRepository.save(doctor);
         doctorDTO = doctorMapper.toDataTransferObject(doctor);
         return doctorDTO;
@@ -60,5 +57,10 @@ public class DoctorService {
 
         DoctorDTO result = doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
         return result;
+    }
+
+    public Page<DoctorDTO> getDoctors(DoctorFilterDTO filter, Pageable pageable) {
+        Page<Doctor> doctors = doctorRepository.findAll(filter.getName(), filter.getSurname(), filter.getProfession(), pageable);
+        return doctors.map(doctorMapper::toDataTransferObject);
     }
 }

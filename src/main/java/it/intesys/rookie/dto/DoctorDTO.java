@@ -4,19 +4,19 @@ import java.time.Instant;
 
 public class DoctorDTO {
     private Long id, phoneNumber;
-    private Instant lastAdmission;
-    private String name, surname, email, profession;
+    private String name, surname, email, profession, avatar, address;
 
     @Override
     public String toString() {
-        return "DoctorDTO{" +
+        return "Doctor{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
-                ", lastAdmission=" + lastAdmission +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
                 ", profession='" + profession + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 
@@ -34,14 +34,6 @@ public class DoctorDTO {
 
     public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Instant getLastAdmission() {
-        return lastAdmission;
-    }
-
-    public void setLastAdmission(Instant lastAdmission) {
-        this.lastAdmission = lastAdmission;
     }
 
     public String getName() {
@@ -74,5 +66,21 @@ public class DoctorDTO {
 
     public void setProfession(String profession) {
         this.profession = profession;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

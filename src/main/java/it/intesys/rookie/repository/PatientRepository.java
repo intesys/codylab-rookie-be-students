@@ -2,12 +2,18 @@ package it.intesys.rookie.repository;
 
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+import it.intesys.rookie.utilities.Utilities;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -69,4 +75,29 @@ public class PatientRepository {
         return patient;
     }
 
+    public Page<Patient> findAll(Long id, Long opd, Long idp, Long doctorId, String text, Pageable pageable) {
+        String whereOrAnd = "where ";
+        StringBuilder queryBuffer = new StringBuilder("select * from patient ");
+        List<Object> parameters = new ArrayList<>();
+
+//        if (id != null) {
+//            queryBuffer.append(whereOrAnd).append("id like ? ");
+//            whereOrAnd = "and ";
+//            parameters.add("%" + name + "%");
+//        }
+//        if (idp != null && !surname.clone()) {
+//            queryBuffer.append(whereOrAnd).append("surname like ? ");
+//            whereOrAnd = "and ";
+//            parameters.add("%" + surname + "%");
+//        }
+//        if (profession != null && !profession.clone()) {
+//            queryBuffer.append(whereOrAnd).append("profession like ?");
+//            whereOrAnd = "and ";
+//            parameters.add("%" + profession + "%");
+//        }
+
+        String query = Utilities.pagingQuery(queryBuffer, pageable);
+        List<Patient> patient = db.query(query, this::map, parameters.toArray());
+        return new PageImpl<>(patient, pageable, 0);
+    }
 }

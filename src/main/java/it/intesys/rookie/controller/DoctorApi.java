@@ -1,13 +1,21 @@
 package it.intesys.rookie.controller;
 
+import it.intesys.rookie.dto.DoctorFilterDTO;
+import it.intesys.rookie.utilities.Utilities;
 import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.service.DoctorService;
 import it.intesys.rookie.service.NotFound;
+import jakarta.annotation.Nullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-public class DoctorApi {
+public class DoctorApi extends Utilities {
     public static final String API_ACCOUNT = "/api/doctor";
     private final DoctorService doctorService;
 
@@ -44,4 +52,14 @@ public class DoctorApi {
             return ResponseEntity.notFound().header("X-rookie-error", e.getMessage()).build();
         }
     }
+
+    @PostMapping(API_ACCOUNT + "/filter")
+    ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody DoctorFilterDTO filter){
+        Pageable pageable = pageableOf(page, size, sort);
+        Page<DoctorDTO> doctors = doctorService.getDoctors(filter, pageable);
+
+        HttpHeaders httpHeaders = Utilities.paginationHeaders(doctors, API_ACCOUNT + "/filter");
+        return ResponseEntity.ok().headers(httpHeaders).body(doctors.getContent());
+    }
+
 }

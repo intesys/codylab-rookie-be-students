@@ -3,8 +3,11 @@ package it.intesys.rookie.service;
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.PatientDTO;
+import it.intesys.rookie.dto.PatientFilterDTO;
 import it.intesys.rookie.dto.PatientMapper;
 import it.intesys.rookie.repository.PatientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -62,5 +65,10 @@ public class PatientService {
 
         PatientDTO result = patientDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
         return result;
+    }
+
+    public Page<PatientDTO> getPatients(PatientFilterDTO filter, Pageable pageable) {
+        Page<Patient> patient = patientRepository.findAll(filter.getId(), filter.getOpd(), filter.getIdp(), filter.getDoctorId(), filter.getText(), pageable);
+        return patient.map(patientMapper::toDataTransferObject);
     }
 }

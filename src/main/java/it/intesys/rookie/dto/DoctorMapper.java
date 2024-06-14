@@ -9,23 +9,26 @@ public class DoctorMapper {
         Doctor doctor = new Doctor();
         doctor.setId(doctorDTO.getId());
         doctor.setPhoneNumber(doctorDTO.getPhoneNumber());
-        doctor.setLastAdmission(doctorDTO.getLastAdmission());
         doctor.setName(doctorDTO.getName());
         doctor.setSurname(doctorDTO.getSurname());
         doctor.setEmail(doctorDTO.getEmail());
         doctor.setProfession(doctorDTO.getProfession());
+        doctor.setAvatar(doctorDTO.getAvatar());
+        doctor.setAddress(doctorDTO.getAddress());
         return doctor;
+
     }
 
     public DoctorDTO toDataTransferObject(Doctor doctor){
         DoctorDTO doctorDTO = new DoctorDTO();
         doctorDTO.setId(doctor.getId());
         doctorDTO.setPhoneNumber(doctor.getPhoneNumber());
-        doctorDTO.setLastAdmission(doctor.getLastAdmission());
         doctorDTO.setName(doctor.getName());
         doctorDTO.setSurname(doctor.getSurname());
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setProfession(doctor.getProfession());
+        doctorDTO.setAvatar(doctor.getAvatar());
+        doctorDTO.setAddress(doctor.getAddress());
         return doctorDTO;
     }
 }
