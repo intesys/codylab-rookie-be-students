@@ -7,6 +7,7 @@ import it.intesys.rookie.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class DoctorService {
@@ -27,5 +28,37 @@ public class DoctorService {
         doctor = doctorRepository.save(doctor);
         doctorDTO = doctorMapper.toDataTransferObject(doctor);
         return doctorDTO;
+    }
+
+    public DoctorDTO getAccount(Long id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        Optional<DoctorDTO> doctorDTO = doctor.map(doctorMapper::toDataTransferObject);
+
+        DoctorDTO result = doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
+        return result;
+    }
+
+    public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
+        if(doctorRepository.findById(id).isEmpty()){
+            throw new NotFound(Doctor.class, id);
+        }
+
+        doctorDTO.setId(id);
+        Doctor doctor = doctorMapper.toEntity(doctorDTO);
+
+        Instant now = Instant.now();
+        doctor.setLastAdmission(now);
+
+        doctor = doctorRepository.save(doctor);
+        doctorDTO = doctorMapper.toDataTransferObject(doctor);
+        return doctorDTO;
+    }
+
+    public DoctorDTO deleteDoctor(Long id){
+        Optional<Doctor> doctor = doctorRepository.deleteDoctor(id);
+        Optional<DoctorDTO> doctorDTO = doctor.map(doctorMapper::toDataTransferObject);
+
+        DoctorDTO result = doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
+        return result;
     }
 }

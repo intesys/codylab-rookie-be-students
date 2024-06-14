@@ -9,13 +9,14 @@ public class DoctorDTO {
 
     @Override
     public String toString() {
-        return "PatientDTO{" +
+        return "DoctorDTO{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
                 ", lastAdmission=" + lastAdmission +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
+                ", profession='" + profession + '\'' +
                 '}';
     }
 

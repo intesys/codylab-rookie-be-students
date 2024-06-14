@@ -1,5 +1,6 @@
 package it.intesys.rookie.service;
 
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientMapper;
@@ -7,6 +8,7 @@ import it.intesys.rookie.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -28,5 +30,37 @@ public class PatientService {
         patient = patientRepository.save(patient);
         patientDTO = patientMapper.toDataTransferObject(patient);
         return patientDTO;
+    }
+
+    public PatientDTO getPatient(Long id) {
+        Optional<Patient> patient = patientRepository.findById(id);
+        Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
+
+        PatientDTO result = patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
+        return result;
+    }
+
+    public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
+        if(patientRepository.findById(id).isEmpty()){
+            throw new NotFound(Patient.class, id);
+        }
+
+        patientDTO.setId(id);
+        Patient patient = patientMapper.toEntity(patientDTO);
+
+        Instant now = Instant.now();
+        patient.setLastAdmission(now);
+
+        patient = patientRepository.save(patient);
+        patientDTO = patientMapper.toDataTransferObject(patient);
+        return patientDTO;
+    }
+
+    public PatientDTO deletePatient(Long id) {
+        Optional<Patient> patient = patientRepository.deletePatient(id);
+        Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
+
+        PatientDTO result = patientDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
+        return result;
     }
 }
