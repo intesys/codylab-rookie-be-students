@@ -6,6 +6,8 @@ import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientMapper;
 import it.intesys.rookie.repository.PatientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -38,10 +40,12 @@ public class PatientService {
         Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
         return patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
     }
-    public PatientDTO delPatient(Long id) {
-        Optional<Patient> patient = patientRepository.deleteById(id);
-        Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
-        return patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
+    public void delPatient(Long id) {
+        if (patientRepository.findById (id).isEmpty()) {
+            throw new NotFound(Doctor.class, id);
+        }
+
+        patientRepository.delete (id);
     }
 
     public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
@@ -58,6 +62,13 @@ public class PatientService {
         patient = patientRepository.save (patient);
         patientDTO = patientMapper.toDataTransferObject (patient);
         return patientDTO;
+
+    }
+
+    public Page<PatientDTO> getPatients(String filter, Pageable pageable) {
+        Page<Patient> patients = patientRepository.findAll (filter, pageable);
+        return patients.map(patientMapper::toDataTransferObject);
+
 
     }
 }
