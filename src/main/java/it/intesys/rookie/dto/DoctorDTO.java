@@ -1,14 +1,22 @@
 package it.intesys.rookie.dto;
 
-import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
+import java.util.Objects;
 
 public class DoctorDTO {
     private Long id, phoneNumber;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name, surname, email, profession, avatar, address;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Long> latestPatients;
 
     @Override
     public String toString() {
-        return "Doctor{" +
+        return "DoctorDTO{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
                 ", name='" + name + '\'' +
@@ -17,6 +25,7 @@ public class DoctorDTO {
                 ", profession='" + profession + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", address='" + address + '\'' +
+                ", patientIds=" + latestPatients +
                 '}';
     }
 
@@ -82,5 +91,26 @@ public class DoctorDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Long> getLatestPatients() {
+        return latestPatients;
+    }
+
+    public void setLatestPatients(List<Long> patientIds) {
+        this.latestPatients = patientIds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorDTO doctorDTO = (DoctorDTO) o;
+        return Objects.equals(id, doctorDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

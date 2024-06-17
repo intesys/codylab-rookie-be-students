@@ -46,8 +46,8 @@ public class DoctorApi extends Utilities {
     @DeleteMapping(API_ACCOUNT + "/{id}")
     ResponseEntity<DoctorDTO> deleteDoctor (@PathVariable Long id) {
         try {
-            DoctorDTO doctorDTO = doctorService.deleteDoctor(id);
-            return ResponseEntity.ok(doctorDTO);
+            doctorService.deleteDoctor(id);
+            return ResponseEntity.ok().build();
         } catch (NotFound e){
             return ResponseEntity.notFound().header("X-rookie-error", e.getMessage()).build();
         }

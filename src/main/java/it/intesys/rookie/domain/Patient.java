@@ -3,19 +3,29 @@ package it.intesys.rookie.domain;
 import java.time.Instant;
 
 public class Patient {
-    private Long id, phoneNumber;
+    private Long id, phoneNumber, opd, idp, lastDoctorVisitedId;
     private Instant lastAdmission;
-    private String name, surname, email;
+    private String name, surname, email, address, avatar, notes;
+    private Boolean chronicPatient;
+    private BloodGroup bloodGroup;
 
     @Override
     public String toString() {
-        return "PatientDTO{" +
+        return "Patient{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
+                ", opd=" + opd +
+                ", idp=" + idp +
+                ", lastDoctorVisitedId=" + lastDoctorVisitedId +
                 ", lastAdmission=" + lastAdmission +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", notes='" + notes + '\'' +
+                ", chronicPatient=" + chronicPatient +
+                ", bloodGroup=" + bloodGroup +
                 '}';
     }
 
@@ -33,6 +43,30 @@ public class Patient {
 
     public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Long getOpd() {
+        return opd;
+    }
+
+    public void setOpd(Long opd) {
+        this.opd = opd;
+    }
+
+    public Long getIdp() {
+        return idp;
+    }
+
+    public void setIdp(Long idp) {
+        this.idp = idp;
+    }
+
+    public Long getLastDoctorVisitedId() {
+        return lastDoctorVisitedId;
+    }
+
+    public void setLastDoctorVisitedId(Long lastDoctorVisitedId) {
+        this.lastDoctorVisitedId = lastDoctorVisitedId;
     }
 
     public Instant getLastAdmission() {
@@ -65,5 +99,45 @@ public class Patient {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Boolean getChronicPatient() {
+        return chronicPatient;
+    }
+
+    public void setChronicPatient(Boolean chronicPatient) {
+        this.chronicPatient = chronicPatient;
+    }
+
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
     }
 }

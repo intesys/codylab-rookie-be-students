@@ -1,7 +1,7 @@
 package it.intesys.rookie.repository;
 
 import it.intesys.rookie.domain.Doctor;
-import it.intesys.rookie.dto.DoctorDTO;
+import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.utilities.Utilities;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class DoctorRepository {
-    private final JdbcTemplate db;
+public class DoctorRepository extends RookieRepository{
 
-    public DoctorRepository(JdbcTemplate db){
-        this.db = db;
+    private final PatientRepository patientRepository;
+
+    public DoctorRepository(JdbcTemplate db, PatientRepository patientRepository){
+        super(db);
+        this.patientRepository = patientRepository;
     }
 
     public Doctor save(Doctor doctor) {
@@ -30,36 +32,62 @@ public class DoctorRepository {
             doctor.setId(id);
             db.update("insert into doctor (id, name, surname, phone_number, address, email, avatar, profession) " +
                     "values (?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(), doctor.getAvatar(), doctor.getProfession());
+            db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) " +
+                    "values (?, ?)", doctor.getPatients(), 100, (ps, patient) -> {
+                ps.setLong(1, doctor.getId());
+                ps.setLong(2, patient.getId());
+            });
             return doctor;
         }  else {
             db.update("update doctor set name = ?, surname = ?, phone_number = ?, address = ?, email = ?, avatar = ?, profession = ? where id = ?", doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(), doctor.getAvatar(), doctor.getProfession(), doctor.getId());
-            return findOriginalAccountById(doctor.getId());
+
+            List<Patient> patients = doctor.getPatients();
+            List<Patient> currentPatients = findDoctorById(doctor.getId()).getPatients();
+
+
+            List<Patient> insertions = subtract(patients, currentPatients);
+            db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, 100, (ps, patient) -> {
+                ps.setLong(1, doctor.getId());
+                ps.setLong(2, patient.getId());
+            });
+
+            List<Patient> deletions = subtract(currentPatients, patients);
+            db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, 100, (ps, account) -> {
+                ps.setLong(1, doctor.getId());
+                ps.setLong(2, account.getId());
+            });
+            return findDoctorById(doctor.getId());
          }
     }
 
     public Optional<Doctor> findById(Long id) {
         try{
-            Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
+            Doctor doctor = findDoctorById(id);
             return Optional.ofNullable(doctor);
         } catch (EmptyResultDataAccessException e){
-            System.out.println("FOUND ERROR\nDoctor with id = " + id);
+            logger.warn(e.getMessage());
             return Optional.empty();
         }
     }
 
-    private Doctor findOriginalAccountById(Long id) {
+    private Doctor findDoctorById(Long id) {
         Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
+        if (doctor != null) {
+            List<Patient> accounts = patientRepository.findByDoctorId(id);
+            doctor.setPatients(accounts);
+        }
         return doctor;
     }
 
     public Optional<Doctor> deleteDoctor(Long id){
         try{
             Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
+            db.update("delete from doctor_patient where doctor_id = ?", id);
             db.update("delete from doctor where id = ?", id);
-            System.out.println("DELETE SUCCESS\nDoctor con id = " + id);
+            logger.debug("DELETE SUCCESS\nDoctor con id = " + id);
             return Optional.ofNullable(doctor);
         } catch (EmptyResultDataAccessException e){
-            System.out.println("DELETE ERROR\nDoctor con id = " + id);
+            logger.debug("DELETE ERROR\nDoctor con id = " + id);
             return Optional.empty();
         }
     }

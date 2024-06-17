@@ -4,7 +4,7 @@ CREATE TABLE public.patient (
 	idp int8 NOT NULL,
 	"name" varchar(128) NULL,
 	surname varchar(128) NULL,
-	phone_number int4 NULL,
+	phone_number int8 NULL,
 	address varchar(128) NULL,
 	email varchar(256) NULL,
 	avatar varchar(128) NULL,
@@ -12,7 +12,7 @@ CREATE TABLE public.patient (
 	notes varchar(512) null,
 	chronicPatient BOOLEAN DEFAULT FALSE,
 	last_admission timestamp NULL,
-	last_doctor_visited_id timestamp NULL,
+	last_doctor_visited_id int8 NOT NULL,
 	CONSTRAINT patient_pkey PRIMARY KEY (id)
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE public.doctor (
 	id int8 NOT NULL,
 	"name" varchar(128) NULL,
 	surname varchar(128) NULL,
-	phone_number int4 NULL,
+	phone_number int8 NULL,
 	address varchar(128) NULL,
 	email varchar(256) NULL,
 	avatar varchar(128) NULL,

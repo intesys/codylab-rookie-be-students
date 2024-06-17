@@ -1,10 +1,12 @@
 package it.intesys.rookie.domain;
 
-import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 
 public class Doctor {
     private Long id, phoneNumber;
     private String name, surname, email, profession, avatar, address;
+    private List<Patient> patients;
 
     @Override
     public String toString() {
@@ -17,6 +19,7 @@ public class Doctor {
                 ", profession='" + profession + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", address='" + address + '\'' +
+                ", patients=" + patients +
                 '}';
     }
 
@@ -82,5 +85,26 @@ public class Doctor {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Doctor doctor = (Doctor) o;
+        return Objects.equals(id, doctor.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
