@@ -1,4 +1,4 @@
-package it.intesys.reposity;
+package it.intesys.repository;
 
 import it.intesys.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class PatientRepository {
-    private final JdbcTemplate db;
+public class PatientRepository extends RookieRepository {
 
     public PatientRepository(JdbcTemplate db) {
-        this.db = db;
+        super(db);
+
     }
 
     public Patient save(Patient patient) {
@@ -85,29 +85,7 @@ public class PatientRepository {
         return new PageImpl<>(patients, pageable, 0);
 
     }
-    protected String pagingQuery(StringBuilder query, Pageable pageable) {
-        String orderSep = "";
-        Sort sort = pageable.getSort();
-        if (!sort.isEmpty()) {
-            query.append(" order by ");
-            for (Sort.Order order: sort) {
-                query.append(orderSep)
-                        .append(order.getProperty())
-                        .append(' ')
-                        .append(order.getDirection().isDescending() ? "desc" : "")
-                        .append(' ');
-                orderSep = ", ";
-            }
-        }
 
-        query.append("limit ")
-                .append(pageable.getPageSize())
-                .append(' ')
-                .append("offset ")
-                .append(pageable.getOffset());
-
-        return query.toString();
-    }
 }
 
 

@@ -1,53 +1,19 @@
 package it.intesys.domain;
 
-import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 
 public class Doctor {
 
     private Long id;
-    private Instant firstAdmission, lastAdmission; //prima e ultima visita
-    private String name, surname, email;
-    private int phone_number;
-    private Status status;
-    private List<Patient> patients;
+    private String name, surname, email, avatar, profession, address;
+    private int phoneNumber;
 
-
-    public List<Patient> getPatients() {
-        return patients;
-    }
-
-    public void setPatients(List<Patient> patients) {
-        this.patients = patients;
-    }
-
-
-    public int getPhone_number() {
-        return phone_number;
-    }
-        public Long getId() {
+    public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Instant getFirstAdmission() {
-        return firstAdmission;
-    }
-
-    public void setFirstAdmission(Instant firstAdmission) {
-        this.firstAdmission = firstAdmission;
-    }
-
-    public Instant getLastAdmission() {
-        return lastAdmission;
-    }
-
-    public void setLastAdmission(Instant lastAdmission) {
-        this.lastAdmission = lastAdmission;
     }
 
     public String getName() {
@@ -74,26 +40,49 @@ public class Doctor {
         this.email = email;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
         return "Doctor{" +
                 "id=" + id +
-                ", firstAdmission=" + firstAdmission +
-                ", lastAdmission=" + lastAdmission +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", phone_number=" + phone_number +
-                ", status=" + status +
-                ", patients=" + patients +
+                ", avatar='" + avatar + '\'' +
+                ", profession='" + profession + '\'' +
+                ", address='" + address + '\'' +
+                ", phone_number=" + phoneNumber +
                 '}';
     }
 

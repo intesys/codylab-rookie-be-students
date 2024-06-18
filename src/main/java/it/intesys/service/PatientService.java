@@ -3,7 +3,7 @@ package it.intesys.service;
 import it.intesys.domain.Patient;
 import it.intesys.dto.PatientDTO;
 import it.intesys.dto.PatientMapper;
-import it.intesys.reposity.PatientRepository;
+import it.intesys.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

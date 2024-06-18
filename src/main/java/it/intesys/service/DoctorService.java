@@ -1,9 +1,12 @@
 package it.intesys.service;
 
+import it.intesys.domain.Doctor;
+import it.intesys.dto.DoctorDTO;
+import it.intesys.dto.DoctorMapper;
+import it.intesys.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.Instant;
 import java.util.Optional;
 
 public class DoctorService {
@@ -18,10 +21,6 @@ public class DoctorService {
 
     public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
-
-        Instant now = Instant.now();
-        doctor.setDateCreated(now);
-        doctor.setDateModified(now);
 
         verify (doctor);
 
@@ -47,9 +46,6 @@ public class DoctorService {
         doctorDTO.setId(id);
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
 
-
-        Instant now = Instant.now();
-        doctor.setDateModified(now);
 
         verify (doctor);
         doctor = doctorRepository.save(doctor);

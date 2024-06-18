@@ -1,6 +1,8 @@
 package it.intesys.controller;
 
 import it.intesys.dto.DoctorDTO;
+import it.intesys.service.DoctorService;
+import it.intesys.service.NotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -14,26 +16,26 @@ public class DoctorApi extends HospitalApi {
 
     public static final String API_PATIENT = "/api/chat";
     public static final String API_PATIENT_FILTER = API_PATIENT + "/filter";
-    private final DoctorService chatService;
+    private final DoctorService doctorService;
 
     public DoctorApi(DoctorService doctorService) {
-        this.chatService = doctorService;
+        this.doctorService = doctorService;
     }
 
     @PostMapping(API_PATIENT)
     DoctorDTO createDoctor (@RequestBody DoctorDTO doctor) {
-        return chatService.createDoctor (doctor);
+        return doctorService.createDoctor (doctor);
     }
 
     @GetMapping(API_PATIENT + "/{id}")
     DoctorDTO getDoctor (@PathVariable Long id) {
-        DoctorDTO doctor = chatService.getDoctor(id);
+        DoctorDTO doctor = doctorService.getDoctor(id);
         return doctor;
     }
 
     @PutMapping(API_PATIENT + "/{id}")
     DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
-        DoctorDTO doctorDTO = chatService.updateDoctor(id, doctor);
+        DoctorDTO doctorDTO = doctorService.updateDoctor(id, doctor);
         return doctorDTO;
     }
 
