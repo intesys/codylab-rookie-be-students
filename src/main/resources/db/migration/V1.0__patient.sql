@@ -1,8 +1,3 @@
--- public.patient definition
-
--- Drop table
-
--- DROP TABLE public.patient;
 
 CREATE TABLE public.patient (
 	id int8 NOT NULL,
@@ -14,9 +9,6 @@ CREATE TABLE public.patient (
 	CONSTRAINT patients_pkey PRIMARY KEY (id)
 );
 
--- public.patient_sequence definition
-
--- DROP SEQUENCE public.patient_sequence;
 
 CREATE SEQUENCE public.patient_sequence
 	INCREMENT BY 1

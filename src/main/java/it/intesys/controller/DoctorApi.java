@@ -11,35 +11,36 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@RestController
 
 public class DoctorApi extends HospitalApi {
 
-    public static final String API_PATIENT = "/api/chat";
-    public static final String API_PATIENT_FILTER = API_PATIENT + "/filter";
+    public static final String API_DOCTOR = "/api/doctor";
+    public static final String API_DOCTOR_FILTER = API_DOCTOR + "/filter";
     private final DoctorService doctorService;
 
     public DoctorApi(DoctorService doctorService) {
         this.doctorService = doctorService;
     }
 
-    @PostMapping(API_PATIENT)
+    @PostMapping(API_DOCTOR)
     DoctorDTO createDoctor (@RequestBody DoctorDTO doctor) {
         return doctorService.createDoctor (doctor);
     }
 
-    @GetMapping(API_PATIENT + "/{id}")
+    @GetMapping(API_DOCTOR + "/{id}")
     DoctorDTO getDoctor (@PathVariable Long id) {
         DoctorDTO doctor = doctorService.getDoctor(id);
         return doctor;
     }
 
-    @PutMapping(API_PATIENT + "/{id}")
+    @PutMapping(API_DOCTOR + "/{id}")
     DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
         DoctorDTO doctorDTO = doctorService.updateDoctor(id, doctor);
         return doctorDTO;
     }
 
-    @DeleteMapping(API_PATIENT + "/{id}")
+    @DeleteMapping(API_DOCTOR + "/{id}")
     ResponseEntity<DoctorDTO> deleteDoctor (@PathVariable Long id) {
         try {
             doctorService.deleteDoctor(id);
@@ -49,12 +50,12 @@ public class DoctorApi extends HospitalApi {
         }
     }
 
-    @PostMapping(API_PATIENT_FILTER)
+    @PostMapping(API_DOCTOR_FILTER)
     ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody String filter) {
         Pageable pageable = pageableOf(page, size, sort);
         Page<DoctorDTO> doctors = doctorService.getDoctors (filter, pageable);
 
-        HttpHeaders httpHeaders = paginationHeaders(doctors, API_PATIENT_FILTER);
+        HttpHeaders httpHeaders = paginationHeaders(doctors, API_DOCTOR_FILTER);
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(doctors.getContent());

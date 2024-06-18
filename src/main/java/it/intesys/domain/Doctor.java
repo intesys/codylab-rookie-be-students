@@ -6,7 +6,7 @@ public class Doctor {
 
     private Long id;
     private String name, surname, email, avatar, profession, address;
-    private int phoneNumber;
+    private Long phoneNumber;
 
     public Long getId() {
         return id;
@@ -64,11 +64,11 @@ public class Doctor {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

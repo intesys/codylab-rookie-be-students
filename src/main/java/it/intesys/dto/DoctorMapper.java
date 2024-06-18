@@ -2,7 +2,9 @@ package it.intesys.dto;
 
 import it.intesys.domain.Doctor;
 import it.intesys.repository.PatientRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DoctorMapper {
 
     private final PatientRepository patientRepository;

@@ -6,8 +6,10 @@ import it.intesys.dto.DoctorMapper;
 import it.intesys.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+@Service
 
 public class DoctorService {
 

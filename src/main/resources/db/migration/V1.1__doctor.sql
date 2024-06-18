@@ -3,11 +3,11 @@ CREATE TABLE public.doctor (
 	"name" varchar(128) NULL,
 	surname varchar(128) NULL,
 	phone_number int4 NULL,
-	firstAdmission timestamp NULL,
-	firstAdmission timestamp NULL,
 	email varchar(256) NULL,
-	status int NOT NULL DEFAULT 1,
-	patients
+	avatar varchar(128) NULL,
+	profession varchar(128) NULL,
+	address varchar(256) NULL,
+
 	CONSTRAINT doctor_pkey PRIMARY KEY (id)
 );
 

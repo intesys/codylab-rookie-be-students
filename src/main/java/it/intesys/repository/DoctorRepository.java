@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+@Repository
 
 public class DoctorRepository extends RookieRepository {
 
@@ -29,14 +31,14 @@ public class DoctorRepository extends RookieRepository {
             doctor.setId(id);
             db.update("insert into doctor (id, address, avatar, email, name, phone_number, profession, surname) " +
                             "values (?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getAddress(), doctor.getAvatar(),
-                            doctor.getEmail(), doctor.getEmail(), doctor.getName(), doctor.getPhoneNumber(),
+                            doctor.getEmail(), doctor.getName(), doctor.getPhoneNumber(),
                             doctor.getProfession(), doctor.getSurname());
 
             return doctor;
         } else {
             int updateCount = db.update("update doctor set address = ?, avatar = ?, email = ?, name = ?, phone_number = ?, " +
                     "profession = ?, surname = ? where id = ?", doctor.getAddress(), doctor.getAvatar(),
-                    doctor.getEmail(), doctor.getEmail(), doctor.getName(), doctor.getPhoneNumber(),
+                    doctor.getEmail(),  doctor.getName(), doctor.getPhoneNumber(),
                     doctor.getProfession(), doctor.getSurname(), doctor.getId());
             if(updateCount != 1){
                 throw new IllegalStateException(String.format("update count %id, excepted 1", updateCount));
@@ -77,7 +79,7 @@ public class DoctorRepository extends RookieRepository {
         doctor.setName(resultSet.getString("name"));
         doctor.setSurname(resultSet.getString("surname"));
         doctor.setEmail(resultSet.getString("email"));
-        doctor.setPhoneNumber(resultSet.getInt("phone_number"));
+        doctor.setPhoneNumber(resultSet.getLong("phone_number"));
         doctor.setAddress(resultSet.getString("address"));
         doctor.setAvatar(resultSet.getString("avatar"));
         return doctor;

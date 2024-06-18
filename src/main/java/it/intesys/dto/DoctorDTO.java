@@ -1,12 +1,17 @@
 package it.intesys.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 public class DoctorDTO {
-
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name, surname, email, avatar, profession, address;
-    private int phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<PatientDTO> latestPatients;
 
     public Long getId() {
@@ -65,11 +70,11 @@ public class DoctorDTO {
         this.address = address;
     }
 
-    public int getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
