@@ -2,12 +2,23 @@ package it.intesys.rookie.dto;
 
 import it.intesys.rookie.domain.BloodGroup;
 import it.intesys.rookie.domain.Patient;
+import it.intesys.rookie.repository.PatientRecordRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
 public class PatientMapper {
+
+    private final PatientRecordRepository patientRecordRepository;
+    private final PatientRecordMapper patientRecordMapper;
+
+    public PatientMapper(PatientRecordRepository patientRecordRepository, PatientRecordMapper patientRecordMapper) {
+        this.patientRecordRepository = patientRecordRepository;
+        this.patientRecordMapper = patientRecordMapper;
+    }
+
+
     public Patient toEntity(PatientDTO patientDTO){
         Patient patient = new Patient();
         patient.setId(patientDTO.getId());
@@ -44,6 +55,9 @@ public class PatientMapper {
         patientDTO.setNotes(patient.getNotes());
         patientDTO.setBloodGroup(BloodGroupDTO.valueOf(patient.getBloodGroup().name()));
         patientDTO.setChronicPatient(patient.getChronicPatient());
+        patientDTO.setPatientRecords(patientRecordRepository.findLatestByPatient(patient, 5)
+                .stream()
+                .map(patientRecordMapper::toDataTransferObject).toList());
         return patientDTO;
 
     }

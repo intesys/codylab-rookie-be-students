@@ -30,7 +30,7 @@ public class DoctorService {
         return doctorDTO;
     }
 
-    public DoctorDTO getAccount(Long id) {
+    public DoctorDTO getDoctor(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         Optional<DoctorDTO> doctorDTO = doctor.map(doctorMapper::toDataTransferObject);
 

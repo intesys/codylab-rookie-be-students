@@ -2,6 +2,7 @@ package it.intesys.rookie.repository;
 
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.utilities.Utilities;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -32,11 +33,7 @@ public class DoctorRepository extends RookieRepository{
             doctor.setId(id);
             db.update("insert into doctor (id, name, surname, phone_number, address, email, avatar, profession) " +
                     "values (?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(), doctor.getAvatar(), doctor.getProfession());
-            db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) " +
-                    "values (?, ?)", doctor.getPatients(), 100, (ps, patient) -> {
-                ps.setLong(1, doctor.getId());
-                ps.setLong(2, patient.getId());
-            });
+
             return doctor;
         }  else {
             db.update("update doctor set name = ?, surname = ?, phone_number = ?, address = ?, email = ?, avatar = ?, profession = ? where id = ?", doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(), doctor.getAvatar(), doctor.getProfession(), doctor.getId());
@@ -73,8 +70,8 @@ public class DoctorRepository extends RookieRepository{
     private Doctor findDoctorById(Long id) {
         Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
         if (doctor != null) {
-            List<Patient> accounts = patientRepository.findByDoctorId(id);
-            doctor.setPatients(accounts);
+            List<Patient> patients = patientRepository.findByDoctorId(id);
+            doctor.setPatients(patients);
         }
         return doctor;
     }
@@ -83,6 +80,7 @@ public class DoctorRepository extends RookieRepository{
         try{
             Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
             db.update("delete from doctor_patient where doctor_id = ?", id);
+            db.update("update patient_record set doctor_id = NULL where id = ?", id);
             db.update("delete from doctor where id = ?", id);
             logger.debug("DELETE SUCCESS\nDoctor con id = " + id);
             return Optional.ofNullable(doctor);

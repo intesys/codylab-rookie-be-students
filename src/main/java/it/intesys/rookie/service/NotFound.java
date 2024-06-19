@@ -1,6 +1,6 @@
 package it.intesys.rookie.service;
 
-import it.intesys.rookie.domain.Doctor;
+import it.intesys.rookie.dto.PatientDTO;
 
 public class NotFound extends RuntimeException {
     private final Class<?> cls;

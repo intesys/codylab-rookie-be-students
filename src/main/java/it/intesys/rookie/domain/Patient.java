@@ -1,6 +1,8 @@
 package it.intesys.rookie.domain;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 
 public class Patient {
     private Long id, phoneNumber, opd, idp, lastDoctorVisitedId;
@@ -8,6 +10,7 @@ public class Patient {
     private String name, surname, email, address, avatar, notes;
     private Boolean chronicPatient;
     private BloodGroup bloodGroup;
+    private List<PatientRecord> patientRecords;
 
     @Override
     public String toString() {
@@ -26,6 +29,7 @@ public class Patient {
                 ", notes='" + notes + '\'' +
                 ", chronicPatient=" + chronicPatient +
                 ", bloodGroup=" + bloodGroup +
+                ", patientRecords=" + patientRecords +
                 '}';
     }
 
@@ -139,5 +143,26 @@ public class Patient {
 
     public void setBloodGroup(BloodGroup bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public List<PatientRecord> getPatientRecords() {
+        return patientRecords;
+    }
+
+    public void setPatientRecords(List<PatientRecord> patientRecords) {
+        this.patientRecords = patientRecords;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient that = (Patient) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

@@ -12,8 +12,4 @@ public class RookieExceptionHandler {
     public ResponseEntity<String> handleNotFound(RuntimeException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-
-    public ResponseEntity<String> handleNotFounds(RuntimeException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 }

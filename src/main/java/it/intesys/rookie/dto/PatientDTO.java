@@ -3,6 +3,8 @@ package it.intesys.rookie.dto;
 import it.intesys.rookie.domain.BloodGroup;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 
 public class PatientDTO {
     private Long id, phoneNumber, opd, idp, lastDoctorVisitedId;
@@ -10,10 +12,11 @@ public class PatientDTO {
     private String name, surname, email, address, avatar, notes;
     private Boolean chronicPatient;
     private BloodGroupDTO bloodGroup;
+    private List<PatientRecordDTO> patientRecords;
 
     @Override
     public String toString() {
-        return "Patient{" +
+        return "PatientDTO{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
                 ", opd=" + opd +
@@ -28,6 +31,7 @@ public class PatientDTO {
                 ", notes='" + notes + '\'' +
                 ", chronicPatient=" + chronicPatient +
                 ", bloodGroup=" + bloodGroup +
+                ", patientRecords=" + patientRecords +
                 '}';
     }
 
@@ -141,5 +145,26 @@ public class PatientDTO {
 
     public void setBloodGroup(BloodGroupDTO bloodGroup) {
         this.bloodGroup = bloodGroup;
+    }
+
+    public List<PatientRecordDTO> getPatientRecords() {
+        return patientRecords;
+    }
+
+    public void setPatientRecords(List<PatientRecordDTO> patientRecords) {
+        this.patientRecords = patientRecords;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatientDTO that = (PatientDTO) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

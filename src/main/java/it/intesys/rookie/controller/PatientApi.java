@@ -1,7 +1,5 @@
 package it.intesys.rookie.controller;
 
-import it.intesys.rookie.dto.DoctorDTO;
-import it.intesys.rookie.dto.DoctorFilterDTO;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientFilterDTO;
 import it.intesys.rookie.service.NotFound;
@@ -60,7 +58,7 @@ public class PatientApi extends Utilities{
         Pageable pageable = pageableOf(page, size, sort);
         Page<PatientDTO> patient = patientService.getPatients(filter, pageable);
 
-        HttpHeaders httpHeaders = Utilities.paginationHeaders(patient, API_ACCOUNT + "/filter");
+        HttpHeaders httpHeaders = paginationHeaders(patient, API_ACCOUNT + "/filter");
         return ResponseEntity.ok().headers(httpHeaders).body(patient.getContent());
     }
 }

@@ -12,7 +12,7 @@ public class DoctorDTO {
     private String name, surname, email, profession, avatar, address;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<Long> latestPatients;
+    private List<PatientDTO> latestPatients;
 
     @Override
     public String toString() {
@@ -93,11 +93,11 @@ public class DoctorDTO {
         this.address = address;
     }
 
-    public List<Long> getLatestPatients() {
+    public List<PatientDTO> getLatestPatients() {
         return latestPatients;
     }
 
-    public void setLatestPatients(List<Long> patientIds) {
+    public void setLatestPatients(List<PatientDTO> patientIds) {
         this.latestPatients = patientIds;
     }
 

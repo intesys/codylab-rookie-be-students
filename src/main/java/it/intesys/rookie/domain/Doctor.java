@@ -1,5 +1,7 @@
 package it.intesys.rookie.domain;
 
+import it.intesys.rookie.dto.PatientDTO;
+
 import java.util.List;
 import java.util.Objects;
 

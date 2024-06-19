@@ -12,9 +12,11 @@ import java.util.Optional;
 public class DoctorMapper {
 
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
-    public DoctorMapper(PatientRepository patientRepository) {
+    public DoctorMapper(PatientRepository patientRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
     }
 
     public Doctor toEntity(DoctorDTO doctorDTO){
@@ -27,12 +29,6 @@ public class DoctorMapper {
         doctor.setProfession(doctorDTO.getProfession());
         doctor.setAvatar(doctorDTO.getAvatar());
         doctor.setAddress(doctorDTO.getAddress());
-        doctor.setPatients(doctorDTO.getLatestPatients().stream().map(id -> {
-            Optional<Patient> optionalPatient = patientRepository.findById(id);
-            if(optionalPatient.isPresent()){
-                return optionalPatient.get();
-            } throw new NotFound(Patient.class, id);
-        }).toList());
         return doctor;
 
     }
@@ -47,7 +43,7 @@ public class DoctorMapper {
         doctorDTO.setProfession(doctor.getProfession());
         doctorDTO.setAvatar(doctor.getAvatar());
         doctorDTO.setAddress(doctor.getAddress());
-        doctorDTO.setLatestPatients(doctor.getPatients().stream().map(Patient::getId).toList());
+        doctorDTO.setLatestPatients(patientRepository.findLatestByDoctor(doctor, 5).stream().map(patientMapper::toDataTransferObject).toList());
         return doctorDTO;
     }
 }

@@ -31,7 +31,7 @@ public class DoctorApi extends Utilities {
     @GetMapping(API_ACCOUNT + "/{id}")
     ResponseEntity<DoctorDTO> getDoctor (@PathVariable Long id) {
         try {
-            DoctorDTO doctorDTO = doctorService.getAccount(id);
+            DoctorDTO doctorDTO = doctorService.getDoctor(id);
             return ResponseEntity.ok(doctorDTO);
         } catch (NotFound e){
             return ResponseEntity.notFound().header("X-rookie-error", e.getMessage()).build();

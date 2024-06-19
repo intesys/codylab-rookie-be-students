@@ -12,7 +12,7 @@ CREATE TABLE public.patient (
 	notes varchar(512) null,
 	chronicPatient BOOLEAN DEFAULT FALSE,
 	last_admission timestamp NULL,
-	last_doctor_visited_id int8 NOT NULL,
+	last_doctor_visited_id int8 NULL,
 	CONSTRAINT patient_pkey PRIMARY KEY (id)
 );
 
