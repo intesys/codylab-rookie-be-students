@@ -27,7 +27,7 @@ public class DoctorApi extends RookieApi {
     List<DoctorDTO> getDoctors(@RequestParam("page") int page, @RequestParam("size")int size, @RequestParam("sort")String sort, @RequestBody @Nullable DoctorFilterDTO filter){
         Pageable pageable = pageableOf(page,size,sort);
         Page<DoctorDTO> doctors = doctorService.getDoctors (filter, pageable);
-
+        return null;
 
 
     }
