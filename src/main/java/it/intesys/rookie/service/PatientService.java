@@ -33,6 +33,7 @@ public class PatientService {
         patient.setLastAdmission(now);
         patient = patientRepository.save(patient);
         patientDTO = patientMapper.toDataTransferObject(patient);
+
         return patientDTO;
     }
     public PatientDTO  getPatient(Long id) {

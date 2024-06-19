@@ -1,0 +1,1 @@
+alter TABLE patient add bloodgroup varchar NOT NULL default 'A_MINUS'

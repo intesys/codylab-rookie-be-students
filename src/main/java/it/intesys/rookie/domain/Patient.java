@@ -1,6 +1,7 @@
 package it.intesys.rookie.domain;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Patient {
     private Long id;
@@ -9,6 +10,80 @@ public class Patient {
     private String email;
     private Long phoneNumber;
     private Instant lastAdmission;
+    private String address;
+    private String avatar;
+    private String notes;
+    private boolean chronicPatient;
+    private Long lastDoctorVisitedId;
+    private BloodGroup bloodGroup;     //mancano patientrecords doctor id's
+    private Long opd;
+    private Long idp;
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public boolean getChronicPatient() {
+        return chronicPatient;
+    }
+
+    public void setChronicPatient(boolean chronicPatient) {
+        this.chronicPatient = chronicPatient;
+    }
+
+    public Long getLastDoctorVisitedId() {
+        return lastDoctorVisitedId;
+    }
+
+    public void setLastDoctorVisitedId(Long lastDoctorVisitedId) {
+        this.lastDoctorVisitedId = lastDoctorVisitedId;
+    }
+
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public Long getOpd() {
+        return opd;
+    }
+
+    public void setOpd(Long opd) {
+        this.opd = opd;
+    }
+
+    public Long getIdp() {
+        return idp;
+    }
+
+    public void setIdp(Long idp) {
+        this.idp = idp;
+    }
+    //patientrecords doctorids
 
 
     public Long getId() {
@@ -68,5 +143,15 @@ public class Patient {
                 ", lastAdmission=" + lastAdmission +
                 '}';
     }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id);
+    }
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 
 }

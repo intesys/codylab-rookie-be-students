@@ -5,6 +5,8 @@ CREATE TABLE public.doctor (
 	email varchar(256) NULL,
 	phonenumber int8 NULL,
 	profession varchar(256) NULL,
+	avatar varchar(128) NULL,
+	address varchar(128) NULL,
 	CONSTRAINT doctor_pkey PRIMARY KEY (id)
 );
 CREATE SEQUENCE public.doctor_sequence

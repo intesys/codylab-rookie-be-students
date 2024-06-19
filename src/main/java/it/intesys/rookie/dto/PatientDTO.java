@@ -1,6 +1,9 @@
 package it.intesys.rookie.dto;
 
+import it.intesys.rookie.domain.BloodGroup;
+
 import java.time.Instant;
+import java.util.Objects;
 
 public class PatientDTO {
     private Long id;
@@ -9,6 +12,14 @@ public class PatientDTO {
     private String email;
     private Long phoneNumber;
     private Instant lastAdmission;
+    private String address;
+    private String avatar;
+    private String notes;
+    private boolean chronicPatient;
+    private Long lastDoctorVisitedId;
+    private BloodGroupDTO bloodGroup;
+    private Long opd;
+    private Long idp;
 
 
     public Long getId() {
@@ -58,6 +69,71 @@ public class PatientDTO {
     public void setLastAdmission(Instant lastAdmission) {
         this.lastAdmission = lastAdmission;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public boolean isChronicPatient() {
+        return chronicPatient;
+    }
+
+    public void setChronicPatient(boolean chronicPatient) {
+        this.chronicPatient = chronicPatient;
+    }
+
+    public Long getLastDoctorVisitedId() {
+        return lastDoctorVisitedId;
+    }
+
+    public void setLastDoctorVisitedId(Long lastDoctorVisitedId) {
+        this.lastDoctorVisitedId = lastDoctorVisitedId;
+    }
+
+    public BloodGroupDTO getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroupDTO bloodGroup) {
+        this.bloodGroup = bloodGroup;
+    }
+
+    public Long getOpd() {
+        return opd;
+    }
+
+    public void setOpd(Long opd) {
+        this.opd = opd;
+    }
+
+    public Long getIdp() {
+        return idp;
+    }
+
+    public void setIdp(Long idp) {
+        this.idp = idp;
+    }
+
     public String toString() {
         return "PatientDTO{" +
                 "id=" + id +
@@ -67,5 +143,18 @@ public class PatientDTO {
                 ", phoneNumber=" + phoneNumber +
                 ", lastAdmission=" + lastAdmission +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatientDTO that = (PatientDTO) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
