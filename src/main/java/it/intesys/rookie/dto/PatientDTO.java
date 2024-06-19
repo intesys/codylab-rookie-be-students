@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class PatientDTO {
-    private Long id, phoneNumber, opd, idp, lastDoctorVisitedId;
+    private Long id, opd, idp, lastDoctorVisitedId;
     private Instant lastAdmission;
-    private String name, surname, email, address, avatar, notes;
+    private String name, surname, email, address, avatar, notes, phoneNumber;
     private Boolean chronicPatient;
     private BloodGroupDTO bloodGroup;
     private List<PatientRecordDTO> patientRecords;
@@ -43,11 +43,11 @@ public class PatientDTO {
         this.id = id;
     }
 
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
