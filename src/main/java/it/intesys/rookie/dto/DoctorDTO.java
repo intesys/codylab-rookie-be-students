@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class DoctorDTO {
-    private Long id, phoneNumber;
+    private Long id;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String name, surname, email, profession, avatar, address;
+    private String name, surname, email, profession, avatar, address, phoneNumber;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PatientDTO> latestPatients;
@@ -37,11 +37,11 @@ public class DoctorDTO {
         this.id = id;
     }
 
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
