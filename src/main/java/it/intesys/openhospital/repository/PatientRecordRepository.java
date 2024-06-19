@@ -22,6 +22,7 @@ public class PatientRecordRepository extends CommonRepository {
             db.update("Insert into patient_record (id, patientId, doctorId, date, typeVisit, reasonVisit, treatmentMade)" +
                     "values(?, ?, ?, ?, ?, ?, ?)", patientRecord.getId(), patientRecord.getPatientId(), patientRecord.getDoctorId(),Timestamp.from(patientRecord.getDate()), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(), patientRecord.getTreatmentMade());
             Timestamp test = Timestamp.from(patientRecord.getDate());
+
             int updateCount = db.update("update patient set lastadmission = ?, lastdoctorvisitedid = ? where id = ?", Timestamp.from(patientRecord.getDate()), patientRecord.getDoctorId(), patientRecord.getPatientId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
