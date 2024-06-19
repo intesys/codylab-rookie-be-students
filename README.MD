@@ -31,8 +31,8 @@ L'architettura del software è mostrata nel seguente schema
 - Importazione in postman dell'api
 - Creazione proprio branch
 
-                       git clone ttps://github.com/intesys/codylab-rookie-be-students.git
-                       cd codylab-rookie-be-students
+                       git clone ttps://github.com/intesys/codylab-controller-be-students.git
+                       cd codylab-controller-be-students
                        git checkout -b <nome> 
                        git push
 

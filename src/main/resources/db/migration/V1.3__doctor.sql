@@ -1,0 +1,1 @@
+alter TABLE public.doctor alter column phone_number type bigint ;
