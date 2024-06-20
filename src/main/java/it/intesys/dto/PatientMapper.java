@@ -9,7 +9,7 @@ public class PatientMapper {
         Patient patient = new Patient();
         patient.setId(patientDTO.getId());
         patient.setUltima_visita(patientDTO.getUltima_visita());
-        patient.setPhone_number(patient.getPhone_number());
+        patient.setPhone_number(patientDTO.getPhone_number());
         patient.setName(patientDTO.getName());
         patient.setSurname(patientDTO.getSurname());
         patient.setEmail(patientDTO.getEmail());

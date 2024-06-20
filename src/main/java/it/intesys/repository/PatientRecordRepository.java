@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 
-public class PatientRecordRepository {
+public class PatientRecordRepository extends RookieRepository {
 
     public PatientRecordRepository(JdbcTemplate db) {
         super(db);
@@ -25,13 +25,12 @@ public class PatientRecordRepository {
     }
 
     public PatientRecord save(PatientRecord patientRecord) {
-        Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
+        Long id = db.queryForObject("select nextval('patientRecord_sequence')", Long.class);
         patientRecord.setId(id);
 
-        db.update("insert into patient (id, name, surname, email) " +
-                        "values (?,?,?,?,?,?)", patientRecord.getId(), patientRecord.getName(), patientRecord.getSurname(),
-                patientRecord.getEmail());
-
+        db.update("insert into patientRecord (id, date, patientId, doctorId, reasonVisit, typeVisit, treatmentMade) " +
+                        "values (?,?,?,?,?,?, ?)", patientRecord.getId(), patientRecord.getDate(), patientRecord.getPatientId(), patientRecord.getDoctorId(),
+        patientRecord.getReasonVisit(), patientRecord.getTypeVisit(), patientRecord.getTreatmentMade());
         return patientRecord;
     }
 
@@ -39,7 +38,7 @@ public class PatientRecordRepository {
 
     public Optional<PatientRecord> findById(Long id) {
         try {
-            PatientRecord patientRecord = db.queryForObject("select * from patient_record where id = ?", this::map, id);
+            PatientRecord patientRecord = db.queryForObject("select * from patientRecord where id = ?", this::map, id);
             return Optional.ofNullable(patientRecord);
         } catch (EmptyResultDataAccessException e) {
         } return Optional.empty();
@@ -47,28 +46,31 @@ public class PatientRecordRepository {
     }
 
     private PatientRecord findOriginalPatientById(Long id){
-        return db.queryForObject("select * from patient_record where id = ?", this::map, id);
+        return db.queryForObject("select * from patientRecord where id = ?", this::map, id);
     }
 
     private PatientRecord map(ResultSet resultSet, int i) throws SQLException {
         PatientRecord patientRecord = new PatientRecord();
         patientRecord.setId(resultSet.getLong("id"));
-        patientRecord.setName(resultSet.getString("name"));
-        patientRecord.setSurname(resultSet.getString("surname"));
-        patientRecord.setEmail(resultSet.getString("email"));
+        patientRecord.setReasonVisit(resultSet.getString("reasonVisit"));
+        patientRecord.setTypeVisit(resultSet.getString("typeVisit"));
+        patientRecord.setTreatmentMade(resultSet.getString("treatmentMade"));
+        patientRecord.setDate(Optional.ofNullable(resultSet.getTimestamp("date")).map(Timestamp::toInstant).orElse(null));
+        patientRecord.setPatientId(resultSet.getLong("patientId"));
+        patientRecord.setDoctorId(resultSet.getLong("doctorId"));
         return patientRecord;
     }
 
     //dati del pomeriggio 14 giugno
 
     public void delete(Long id){
-        int updateCount  = db.update("delete from patient_record where id= ?", id);
+        int updateCount  = db.update("delete from patientRecord where id= ?", id);
         if (updateCount != 1)
             throw new IllegalStateException(String.format("update count %d, expected 1", id));
     }
 
     public Page<PatientRecord> findAll(String filter, Pageable pageable){
-        StringBuilder queryBuffer = new StringBuilder("select * from patient_record");
+        StringBuilder queryBuffer = new StringBuilder("select * from patientRecord");
 
         List<Object> parameters = new ArrayList<>();
         if(filter != null && !filter.isBlank()){
@@ -79,8 +81,8 @@ public class PatientRecordRepository {
             }
         }
         String query = pagingQuery(queryBuffer, pageable);
-        List<Patient> patients = db.query(queryBuffer.toString(), this::map, parameters.toArray());
-        return new PageImpl<>(patients, pageable, 0);
+        List<PatientRecord> patientsRecord = db.query(queryBuffer.toString(), this::map, parameters.toArray());
+        return new PageImpl<>(patientsRecord, pageable, 0);
 
     }
 }

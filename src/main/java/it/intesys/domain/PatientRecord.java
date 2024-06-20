@@ -4,11 +4,9 @@ import java.time.Instant;
 
 public class PatientRecord {
     private Long id;
-    private Instant ultimaVisita;
-    private String name;
-    private String surname;
-    private String email;
-    private int phoneNumber;
+    private Instant Date;
+    private Long patientId, doctorId;
+    private String reasonVisit, typeVisit, TreatmentMade;
 
     public Long getId() {
         return id;
@@ -18,55 +16,64 @@ public class PatientRecord {
         this.id = id;
     }
 
-    public Instant getUltimaVisita() {
-        return ultimaVisita;
+    public Instant getDate() {
+        return Date;
     }
 
-    public void setUltimaVisita(Instant ultimaVisita) {
-        this.ultimaVisita = ultimaVisita;
+    public void setDate(Instant date) {
+        Date = date;
     }
 
-    public String getName() {
-        return name;
+    public Long getPatientId() {
+        return patientId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
     }
 
-    public String getSurname() {
-        return surname;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
     }
 
-    public String getEmail() {
-        return email;
+    public String getReasonVisit() {
+        return reasonVisit;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setReasonVisit(String reasonVisit) {
+        this.reasonVisit = reasonVisit;
     }
 
-    public int getPhoneNumber() {
-        return phoneNumber;
+    public String getTypeVisit() {
+        return typeVisit;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setTypeVisit(String typeVisit) {
+        this.typeVisit = typeVisit;
+    }
+
+    public String getTreatmentMade() {
+        return TreatmentMade;
+    }
+
+    public void setTreatmentMade(String treatmentMade) {
+        TreatmentMade = treatmentMade;
     }
 
     @Override
     public String toString() {
         return "PatientRecord{" +
                 "id=" + id +
-                ", ultimaVisita=" + ultimaVisita +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                ", Date=" + Date +
+                ", patientId=" + patientId +
+                ", doctorId=" + doctorId +
+                ", reasonVisit='" + reasonVisit + '\'' +
+                ", typeVisit='" + typeVisit + '\'' +
+                ", TreatmentMade='" + TreatmentMade + '\'' +
                 '}';
     }
 }

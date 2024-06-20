@@ -5,6 +5,8 @@ import it.intesys.domain.PatientRecord;
 import it.intesys.dto.PatientDTO;
 import it.intesys.dto.PatientMapper;
 import it.intesys.dto.PatientRecordDTO;
+import it.intesys.dto.PatientRecordMapper;
+import it.intesys.repository.PatientRecordRepository;
 import it.intesys.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,20 +26,20 @@ public class PatientRecordService {
         this.patientRecordMapper = patientRecordMapper;
     }
 
-    public PatientRecordDTO createPatient(PatientRecordDTO patientRecordDTO) {
+    public PatientRecordDTO createPatientRecord(PatientRecordDTO patientRecordDTO) {
         PatientRecord patientRecord = patientRecordMapper.toEntity (patientRecordDTO);
 
         Instant now = Instant.now();
-        patientRecord.setUltima_visita(Instant.now());
+        patientRecord.setDate(Instant.now());
 
         patientRecord = patientRecordRepository.save (patientRecord);
         patientRecordDTO = patientRecordMapper.toDataTrasferObject (patientRecord);
-        return patientDTO;
+        return patientRecordDTO;
     }
 
     //codici pomeriggio 13 giugno
 
-    public PatientRecordDTO getPatient (Long id){
+    public PatientRecordDTO getPatientRecord (Long id){
         Optional<PatientRecord> patientRecord = patientRecordRepository.findById (id);
         Optional<PatientRecordDTO> patientRecordDTO = patientRecord.map(patientRecordMapper::toDataTrasferObject);
         return patientRecordDTO.orElseThrow(() -> new NotFound(PatientRecord.class, id));
@@ -45,7 +47,7 @@ public class PatientRecordService {
 
     //codici pomeriggio 14 giugno
 
-    public PatientRecordDTO updatePatient (Long id, PatientRecordDTO patientRecordDTO) {
+    public PatientRecordDTO updatePatientRecord (Long id, PatientRecordDTO patientRecordDTO) {
         if (patientRecordRepository.findById(id).isEmpty()){
             throw new NotFound(PatientRecord.class, id);
         }
@@ -53,21 +55,16 @@ public class PatientRecordService {
         PatientRecord patientRecord = patientRecordMapper.toEntity(patientRecordDTO);
 
         Instant now = Instant.now();
-        patientRecord.setUltima_visita(now);
+        patientRecord.setDate(now);
 
         patientRecord = patientRecordRepository.save (patientRecord);
         patientRecordDTO = patientRecordMapper.toDataTrasferObject(patientRecord);
         return patientRecordDTO;
     }
-    public void deletePatient (Long id) {
+    public void deletePatientRecord (Long id) {
         if(patientRecordRepository.findById (id).isEmpty()){
             throw new NotFound(PatientRecord.class, id);
         }
         patientRecordRepository.delete (id);
-    }
-
-    public Page<PatientRecordDTO> getPatients(String filter, Pageable pageable) {
-        Page<PatientRecord> patientsRecord = patienRecordtRepository.findAll (filter,pageable);
-        return patientsRecord.map(patientRecordMapper::toDataTrasferObject);
     }
 }
