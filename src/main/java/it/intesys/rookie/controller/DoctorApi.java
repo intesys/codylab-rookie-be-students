@@ -1,20 +1,14 @@
 package it.intesys.rookie.controller;
-import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.dto.DoctorDTO;
-import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.service.DoctorService;
 import it.intesys.rookie.service.NotFound;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.print.Doc;
 import java.util.List;
 
 @RestController

@@ -1,17 +1,13 @@
 package it.intesys.rookie.service;
 
 import it.intesys.rookie.domain.Doctor;
-import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.dto.DoctorMapper;
-import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
-import java.time.Instant;
 import java.util.Optional;
 
 @Service

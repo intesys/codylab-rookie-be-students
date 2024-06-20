@@ -1,6 +1,4 @@
 package it.intesys.rookie.dto;
-
-import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.domain.PatientRecord;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +17,7 @@ public class PatientRecordMapper {
         return patientRecord;
 
     }
+
 
 
     public PatientRecordDTO toDataTransferObject(PatientRecord patientRecord) {

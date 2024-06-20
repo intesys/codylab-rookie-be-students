@@ -1,12 +1,10 @@
 CREATE TABLE patientrecord(
     id bigint NOT NULL primary key,
     patient_id bigint NOT NULL REFERENCES patient(id),
-    doctor_id bigint NOT NULL REFERENCES doctor(Id),
     date TIMESTAMP NULL,
     typevisit VARCHAR(255),
     reasonvisit TEXT,
     treatmentmade TEXT
-
 );
 
 

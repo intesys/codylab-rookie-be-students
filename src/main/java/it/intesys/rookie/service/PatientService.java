@@ -2,14 +2,12 @@ package it.intesys.rookie.service;
 
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
-import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientMapper;
 import it.intesys.rookie.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.Instant;
 import java.util.Optional;

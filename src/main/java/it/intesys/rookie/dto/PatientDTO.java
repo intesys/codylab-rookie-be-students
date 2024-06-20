@@ -1,7 +1,5 @@
 package it.intesys.rookie.dto;
 
-import it.intesys.rookie.domain.BloodGroup;
-
 import java.time.Instant;
 import java.util.Objects;
 
