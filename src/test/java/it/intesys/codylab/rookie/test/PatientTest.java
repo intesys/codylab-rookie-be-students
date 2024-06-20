@@ -31,7 +31,7 @@ public class PatientTest {
     public static final String AVATAR = "base64 image";
     public static final String EMAIL = "carlo.marchiori@intesys.it";
     public static final String NAME = "Carlo";
-    public static final Long PHONE_NUMBER = 6666666666L;
+    public static final Long PHONE_NUMBER = 6666666L;
     public static final String PROFESSION = "IT";
     public static final String SURNAME = "Marchiori";
     public static final PatientDTO.BloodGroupEnum BLOOD_GROUP = PatientDTO.BloodGroupEnum.A_MINUS;
@@ -44,7 +44,7 @@ public class PatientTest {
     public static final String AVATAR2 = "base64 image 2";
     public static final String EMAIL2 = "enrico.costanzi@intesys.it";
     public static final String NAME2 = "Enrico";
-    public static final Long PHONE_NUMBER2 = 7777777777L;
+    public static final Long PHONE_NUMBER2 = 7777777L;
     public static final String PROFESSION2 = "IT Architect";
     public static final String SURNAME2 = "Costanzi";
     public static final PatientDTO.BloodGroupEnum BLOOD_GROUP2 = PatientDTO.BloodGroupEnum.ZERO_PLUS;
@@ -54,7 +54,7 @@ public class PatientTest {
     public static final long OPD2 = 4L;
     @Autowired
     private WebApplicationContext applicationContext;
-    private  ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private MockMvc mockMvc;
 
@@ -149,8 +149,7 @@ public class PatientTest {
                 .content(filter != null? objectMapper.writeValueAsString(filter): "")).andReturn().getResponse();
         assertEquals(response.getStatus(), 200);
 
-        List<PatientDTO> patients = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<PatientDTO>>(){});
-        return patients;
+        return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<PatientDTO>>(){});
     }
 
     @Test
