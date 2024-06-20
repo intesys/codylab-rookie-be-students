@@ -1,5 +1,6 @@
 package it.intesys.rookie.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -105,6 +106,9 @@ public class Doctor {
     }
 
     public List<Patient> getPatients() {
+        if(patients == null) {
+            patients = new ArrayList<>();
+        }
         return patients;
     }
 

@@ -2,6 +2,7 @@ package it.intesys.rookie.controller;
 import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.service.DoctorService;
 import it.intesys.rookie.service.NotFound;
+import it.intesys.rookie.dto.DoctorFilterDTO;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public class DoctorApi extends RookieApi{
     public DoctorApi(DoctorService doctorService) {
         this.doctorService = doctorService;
     }
-    @PostMapping("/api/doctor")
+    @PostMapping(API_DOCTOR)
     DoctorDTO createDoctor(@RequestBody DoctorDTO doctor){
         return doctorService.createDoctor (doctor);
     }
@@ -44,18 +45,15 @@ public class DoctorApi extends RookieApi{
         }
     }
     @PutMapping(API_DOCTOR_ID)
-    DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
-        return doctorService.updateDoctor(id, doctorDTO);
+    void updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
+        doctorService.updateDoctor(id, doctorDTO);
     }
     @PostMapping(API_DOCTOR_FILTER)
-    ResponseEntity <List<DoctorDTO>> getDoctors(@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @RequestBody @Nullable String filter){
+    ResponseEntity<List<DoctorDTO>> getDoctors(@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @RequestBody @Nullable DoctorFilterDTO filter){
         Pageable pageable = pageableOf(page, size, sort);
         Page<DoctorDTO> doctors = doctorService.getDoctors(filter, pageable);
         HttpHeaders httpHeaders = paginationHeaders(doctors, API_DOCTOR_FILTER);
-
-        return ResponseEntity.ok()
-                .headers(httpHeaders)
-                .body(doctors.getContent());
+        return ResponseEntity.ok().headers(httpHeaders).body(doctors.getContent());
     }
 
 }
