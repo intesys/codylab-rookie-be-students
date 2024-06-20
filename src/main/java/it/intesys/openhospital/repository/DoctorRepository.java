@@ -1,6 +1,7 @@
 package it.intesys.openhospital.repository;
 
 import it.intesys.openhospital.domain.Doctor;
+import it.intesys.openhospital.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,9 +17,13 @@ import java.util.Optional;
 
 @Repository
 public class DoctorRepository extends CommonRepository {
-    public DoctorRepository(JdbcTemplate db) {
+    private final PatientRepository patientRepository;
+
+    public DoctorRepository(JdbcTemplate db, PatientRepository patientRepository) {
         super(db);
+        this.patientRepository = patientRepository;
     }
+
 
     public Doctor save(Doctor doctor) {
         if (doctor.getId() == null) {
@@ -34,6 +39,21 @@ public class DoctorRepository extends CommonRepository {
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
             }
+            List<Patient> patients = doctor.getPatients();
+            List<Patient> currentPatients = getDoctor(doctor.getId()).getPatients();
+
+
+            List<Patient> insertions = subtract(patients, currentPatients);
+            db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, patient) -> {
+                ps.setLong(1, doctor.getId());
+                ps.setLong(2, patient.getId());
+            });
+
+            List<Patient> deletions = subtract(currentPatients, patients);
+            db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, BATCH_SIZE, (ps, account) -> {
+                ps.setLong(1, doctor.getId());
+                ps.setLong(2, account.getId());
+            });
             return getDoctor(doctor.getId());
         }
     }
@@ -49,6 +69,10 @@ public class DoctorRepository extends CommonRepository {
 
     private Doctor getDoctor(Long id) {
         Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
+        if (doctor != null) {
+            List<Patient> patients = patientRepository.findByDoctorId(id);
+            doctor.setPatients(patients);
+        }
         return doctor;
     }
 

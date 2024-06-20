@@ -1,6 +1,7 @@
 package it.intesys.openhospital.domain;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 public class Patient {
@@ -18,6 +19,7 @@ public class Patient {
     private Boolean chronicPatient;
     private Instant LastAdmission;
     private Long lastDoctorVisitedId;
+    private List<PatientRecord> patientRecords;
 
     public Long getId() {
         return id;
@@ -131,6 +133,13 @@ public class Patient {
         this.lastDoctorVisitedId = lastDoctorVisitedId;
     }
 
+    public List<PatientRecord> getPatientRecords() {
+        return patientRecords;
+    }
+
+    public void setPatientRecords(List<PatientRecord> patientRecords) {
+        this.patientRecords = patientRecords;
+    }
 
     @Override
     public boolean equals(Object o) {

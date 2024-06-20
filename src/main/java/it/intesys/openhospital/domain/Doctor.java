@@ -1,6 +1,7 @@
 package it.intesys.openhospital.domain;
 
 import java.util.Objects;
+import java.util.List;
 
 public class Doctor {
     private Long id;
@@ -11,6 +12,7 @@ public class Doctor {
     private String email;
     private String avatar;
     private String profession;
+    private List<Patient> patients;
 
     public Long getId() {
         return id;
@@ -76,6 +78,15 @@ public class Doctor {
         this.profession = profession;
     }
 
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+
     @Override
     public String toString() {
         return "Doctor{" +
@@ -87,6 +98,7 @@ public class Doctor {
                 ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", profession='" + profession + '\'' +
+                ", patients=" + patients +
                 '}';
     }
 

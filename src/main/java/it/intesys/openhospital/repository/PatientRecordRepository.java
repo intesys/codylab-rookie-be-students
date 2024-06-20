@@ -25,13 +25,18 @@ public class PatientRecordRepository extends CommonRepository {
                     "values(?, ?, ?, ?, ?, ?, ?)", patientRecord.getId(), patientRecord.getPatientId(), patientRecord.getDoctorId(),Timestamp.from(patientRecord.getDate()), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(), patientRecord.getTreatmentMade());
             Timestamp test = Timestamp.from(patientRecord.getDate());
 
+            Integer count = db.queryForObject("select count(*) from doctor_patient where doctor_id = ? and patient_id = ?", Integer.class, patientRecord.getDoctorId(), patientRecord.getPatientId());
+            if (count == null || count == 0) {
+                db.update("INSERT INTO doctor_patient (doctor_id, patient_id) values (" + patientRecord.getDoctorId() + ", " + patientRecord.getPatientId() + ")");
+            }
+
             int updateCount = db.update("update patient set lastadmission = ?, lastdoctorvisitedid = ? where id = ?", Timestamp.from(patientRecord.getDate()), patientRecord.getDoctorId(), patientRecord.getPatientId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
             }
             return patientRecord;
         } else {
-            int updateCount = db.update("update patient_record set patientId = ?, doctorId = ?, date = ?, typeVisit = ?, reasonVisit = ?, treatmentMade = ? where id = ?", patientRecord.getPatientId(), patientRecord.getDoctorId(), Timestamp.from(patientRecord.getDate()), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(),
+            int updateCount = db.update("update patient_record set patientId = ?, doctorId = ?, typeVisit = ?, reasonVisit = ?, treatmentMade = ? where id = ?", patientRecord.getPatientId(), patientRecord.getDoctorId(), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(),
                     patientRecord.getTreatmentMade(), patientRecord.getId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));

@@ -6,9 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommonRepository {
     protected final JdbcTemplate db;
     protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final int BATCH_SIZE = 100;
 
     public CommonRepository(JdbcTemplate db) {
         this.db = db;
@@ -36,5 +40,11 @@ public class CommonRepository {
                 .append(pageable.getOffset());
 
         return query.toString();
+    }
+
+    protected <T> List<T> subtract(List<T> from, List<T> what) {
+        ArrayList<T> clone = new ArrayList<>(from);
+        clone.removeAll(what);
+        return clone;
     }
 }

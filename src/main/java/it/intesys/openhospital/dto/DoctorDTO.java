@@ -1,5 +1,7 @@
 package it.intesys.openhospital.dto;
 
+import java.util.List;
+
 public class DoctorDTO {
         private Long id;
         private String name;
@@ -9,6 +11,7 @@ public class DoctorDTO {
         private String email;
         private String avatar;
         private String profession;
+        private List<PatientDTO> latestPatients;
 
         public Long getId() {
             return id;
@@ -73,4 +76,12 @@ public class DoctorDTO {
         public void setProfession(String profession) {
             this.profession = profession;
         }
+
+    public List<PatientDTO> getLatestPatients() {
+        return latestPatients;
+    }
+
+    public void setLatestPatients(List<PatientDTO> latestPatients) {
+        this.latestPatients = latestPatients;
+    }
 }

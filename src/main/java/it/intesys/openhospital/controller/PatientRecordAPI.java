@@ -1,13 +1,7 @@
 package it.intesys.openhospital.controller;
 
-import it.intesys.openhospital.dto.PatientDTO;
-import it.intesys.openhospital.dto.PatientFilterDTO;
 import it.intesys.openhospital.dto.PatientRecordDTO;
 import it.intesys.openhospital.service.PatientRecordService;
-import jakarta.annotation.Nullable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

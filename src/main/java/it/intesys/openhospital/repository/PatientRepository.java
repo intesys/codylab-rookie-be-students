@@ -33,7 +33,7 @@ public class PatientRepository extends CommonRepository {
                     patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastAdmission(), patient.getLastDoctorVisitedId());
             return patient;
         } else {
-            int updateCount = db.update("update patient set LastAdmission = ?, opd = ?, idp = ?, name = ?, surname= ?, phoneNumber = ?, address = ?, email = ?, avatar = ?, bloodGroup = ?, notes = ?, chronicPatient = ?,  lastDoctorVisitedId = ?, where id = ?", Timestamp.from(patient.getLastAdmission()), patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
+            int updateCount = db.update("update patient set opd = ?, idp = ?, name = ?, surname= ?, phoneNumber = ?, address = ?, email = ?, avatar = ?, bloodGroup = ?, notes = ?, chronicPatient = ?,  lastDoctorVisitedId = ?, where id = ?", patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
                     patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, excepted 1", updateCount));
@@ -120,7 +120,11 @@ public class PatientRepository extends CommonRepository {
         List<Patient> patients = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(patients, pageable, 0);
     }
-
+    public List<Patient> findByDoctorId(Long doctorId) {
+        return db.query("select patient.* from doctor_patient " +
+                "join patient on doctor_patient.patient_id = patient.id " +
+                "where doctor_patient.doctor_id = ?", this::map, doctorId);
+    }
 
     public void delete(Long id) {
         int updateCount = db.update("delete from patient where id = ?", id);

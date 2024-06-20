@@ -3,6 +3,7 @@ package it.intesys.openhospital.domain;
 import java.time.Instant;
 import java.util.Objects;
 
+
 public class PatientRecord {
     private Long id;
     private Long patientId;
