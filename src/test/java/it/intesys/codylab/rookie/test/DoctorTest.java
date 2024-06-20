@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.print.Doc;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -122,10 +124,8 @@ public class DoctorTest {
 
     @Test
     public void testGetDoctor() throws Exception {
-        createDoctor();
-
-        Long id = 1L;
-        DoctorDTO doctor = getDoctor(id);
+        DoctorDTO doctor = createDoctor();
+        doctor = getDoctor(doctor.getId());
 
         assertEquals(doctor.getAddress(), ADDRESS);
         assertEquals(doctor.getAvatar(), AVATAR);
