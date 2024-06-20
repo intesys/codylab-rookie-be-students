@@ -1,7 +1,7 @@
 package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.rookie.App;
+import it.intesys.codylab.rookie.App;
 import it.intesys.rookie.dto.DoctorDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,13 +47,13 @@ public class DoctorTest {
     public void testCreateDoctor() throws Exception {
         DoctorDTO doctor = createDoctor();
 
-        assertEquals(ADDRESS, doctor.getAddress());
-        assertEquals(AVATAR, doctor.getAvatar());
-        assertEquals(EMAIL, doctor.getEmail());
-        assertEquals(NAME, doctor.getName());
-        assertEquals(PHONE_NUMBER, doctor.getPhoneNumber());
-        assertEquals(PROFESSION, doctor.getProfession());
-        assertEquals(SURNAME, doctor.getSurname());
+        assertEquals(doctor.getAddress(), ADDRESS);
+        assertEquals(doctor.getAvatar(), AVATAR);
+        assertEquals(doctor.getEmail(), EMAIL);
+        assertEquals(doctor.getName(), NAME);
+        assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
+        assertEquals(doctor.getProfession(), PROFESSION);
+        assertEquals(doctor.getSurname(), SURNAME);
     }
 
     private DoctorDTO createDoctor () throws Exception {
@@ -85,12 +85,12 @@ public class DoctorTest {
 
         DoctorDTO doctor = objectMapper.readValue(response.getContentAsString(), DoctorDTO.class);
 
-        assertEquals(ADDRESS, doctor.getAddress());
-        assertEquals(AVATAR, doctor.getAvatar());
-        assertEquals(EMAIL, doctor.getEmail());
-        assertEquals(NAME, doctor.getName());
-        assertEquals(PHONE_NUMBER, doctor.getPhoneNumber());
-        assertEquals(PROFESSION, doctor.getProfession());
-        assertEquals(SURNAME, doctor.getSurname());
+        assertEquals(doctor.getAddress(), ADDRESS);
+        assertEquals(doctor.getAvatar(), AVATAR);
+        assertEquals(doctor.getEmail(), EMAIL);
+        assertEquals(doctor.getName(), NAME);
+        assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
+        assertEquals(doctor.getProfession(), PROFESSION);
+        assertEquals(doctor.getSurname(), SURNAME);
     }
 }
