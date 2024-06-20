@@ -1,7 +1,7 @@
 package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.codylab.rookie.App;
+import it.intesys.rookie.App;
 import it.intesys.rookie.dto.DoctorDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class DoctorTest {
     public static final String SURNAME2 = "Costanzi";
     @Autowired
     private WebApplicationContext applicationContext;
-    private  ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private MockMvc mockMvc;
 

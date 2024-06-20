@@ -1,7 +1,7 @@
-package it.intesys.codylab.rookie.test;
+package it.intesys.codylab.rookie.testDenis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.codylab.rookie.App;
+import it.intesys.codylab.App;
 import it.intesys.rookie.dto.DoctorDTO;
 import org.junit.Before;
 import org.junit.Test;
