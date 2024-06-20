@@ -2,6 +2,7 @@ package it.intesys.rookielessons.service;
 
 import it.intesys.rookielessons.domain.Doctor;
 import it.intesys.rookielessons.dto.DoctorDTO;
+import it.intesys.rookielessons.dto.DoctorFilterDTO;
 import it.intesys.rookielessons.dto.DoctorMapper;
 import it.intesys.rookielessons.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
@@ -61,8 +62,8 @@ public class DoctorService {
         doctorRepository.deleteDoctor(id);
     }
 
-    public Page<DoctorDTO> getDoctors(String filter, Pageable pageable) {
-        Page<Doctor> doctors = doctorRepository.findAll (filter, pageable);
+    public Page<DoctorDTO> getDoctors(DoctorFilterDTO filter, Pageable pageable) {
+        Page<Doctor> doctors = doctorRepository.findAll (filter.getName(), filter.getSurname(), filter.getProfession(), pageable);
         return doctors.map(doctorMapper::toDataTransferObject);
     }
 }

@@ -78,14 +78,31 @@ public class DoctorRepository extends HospitalRepository {
         return doctor;
     }
 
-    public Page<Doctor> findAll(String filter, Pageable pageable) {
+    public Page<Doctor> findAll(String name, String surname, String profession, Pageable pageable) {
         StringBuilder queryBuffer = new StringBuilder("select * from doctor ");
         List<Object> parameters = new ArrayList<>();
-        if (filter != null && !filter.isBlank()) {
-            queryBuffer.append("where name like ? or surname like ? or email like ? or phone_number like ?");
-            String like = "%" + filter + "%";
-            for (int i = 0; i < 4; i++) parameters.add(like);
+        String whereOrAnd = "where";
+        if (name != null && !name.isBlank()) {
+            queryBuffer.append(whereOrAnd).append(" name like ?");
+            String like = "%" + name + "%";
+            parameters.add(like);
+            whereOrAnd = "and";
         }
+
+        if (surname != null && !surname.isBlank()) {
+            queryBuffer.append(whereOrAnd).append(" surname like ?");
+            String like = "%" + surname + "%";
+            parameters.add(like);
+            whereOrAnd = "and";
+        }
+
+        if (profession != null && !profession.isBlank()) {
+            queryBuffer.append(whereOrAnd).append(" profession like ?");
+            String like = "%" + profession + "%";
+            parameters.add(like);
+            whereOrAnd = "and";
+        }
+
         String query = pagingQuery(queryBuffer, pageable);
         List<Doctor> doctors = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(doctors, pageable, 0);

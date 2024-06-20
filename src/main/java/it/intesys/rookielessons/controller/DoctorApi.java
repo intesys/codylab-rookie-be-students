@@ -1,6 +1,7 @@
 package it.intesys.rookielessons.controller;
 
 import it.intesys.rookielessons.dto.DoctorDTO;
+import it.intesys.rookielessons.dto.DoctorFilterDTO;
 import it.intesys.rookielessons.service.DoctorService;
 import it.intesys.rookielessons.service.NotFound;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,7 @@ public class DoctorApi extends HospitalApi{
     }
 
     @PostMapping(API_DOCTOR_FILTER)
-    ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody String filter) {
+    ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody DoctorFilterDTO filter) {
         Pageable pageable = pageableOf(page, size, sort);
         Page<DoctorDTO> doctors = doctorService.getDoctors (filter, pageable);
 
