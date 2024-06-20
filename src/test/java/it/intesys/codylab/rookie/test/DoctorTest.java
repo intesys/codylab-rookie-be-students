@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.print.Doc;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -121,10 +123,33 @@ public class DoctorTest {
 
     @Test
     public void testGetDoctor() throws Exception {
-        createDoctor();
+        DoctorDTO doctor = createDoctor();
+        doctor = getDoctor(doctor.getId());
 
-        Long id = 1L;
-        DoctorDTO doctor = getDoctor(id);
+        assertEquals(doctor.getAddress(), ADDRESS);
+        assertEquals(doctor.getAvatar(), AVATAR);
+        assertEquals(doctor.getEmail(), EMAIL);
+        assertEquals(doctor.getName(), NAME);
+        assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
+        assertEquals(doctor.getProfession(), PROFESSION);
+        assertEquals(doctor.getSurname(), SURNAME);
+    }
+
+    @Test
+    public void testDeleteDoctor() throws Exception {
+        DoctorDTO doctor = createDoctor();
+
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/api/doctor/" + doctor.getId())
+                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        assertEquals(response.getStatus(), 200);
+
+        response = mockMvc.perform(MockMvcRequestBuilders.delete("/api/doctor/" + doctor.getId())
+                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        assertEquals(response.getStatus(), 200);
+
+        response = mockMvc.perform(MockMvcRequestBuilders.get("/api/doctor/" + doctor.getId())
+                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        assertEquals(response.getStatus(), 404);
 
         assertEquals(doctor.getAddress(), ADDRESS);
         assertEquals(doctor.getAvatar(), AVATAR);
