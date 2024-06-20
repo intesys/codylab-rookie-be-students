@@ -26,21 +26,21 @@ public class DoctorRepository extends RookieRepository {
     public Doctor save(Doctor doctor) {
         Long id = db.queryForObject("select nextval('doctor_sequence')", Long.class);
         doctor.setId(id);
-        db.update("insert into doctor (id, name, surname, email, phone_number, profession)"+
-                        "values (?, ?, ?, ?, ?, ?)",doctor.getId(), doctor.getName(),doctor.getSurname(),doctor.getEmail(),
-                doctor.getPhoneNumber(), doctor.getProfession());
+        db.update("insert into doctor (id, name, surname, phone_number, email, avatar, profession, address)"+
+                        "values (?, ?, ?, ?, ?, ?, ?, ?)",doctor.getId(), doctor.getName(),doctor.getSurname(),
+                doctor.getPhoneNumber(),doctor.getEmail(),doctor.getAvatar(), doctor.getProfession(), doctor.getAddress());
         return doctor;
     }
 
 
-
     public Optional<Doctor> findById(Long id) {
-        try {
-            Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
+        try{
+            Doctor doctor = findDoctorById(id);
             return Optional.ofNullable(doctor);
-        } catch (EmptyResultDataAccessException e) {
-        } return Optional.empty();
-
+        } catch (EmptyResultDataAccessException e){
+            logger.warn(e.getMessage());
+            return Optional.empty();
+        }
 
     }
 
@@ -88,9 +88,10 @@ public class DoctorRepository extends RookieRepository {
         doctor.setName(resultSet.getString("name"));
         doctor.setSurname(resultSet.getString("surname"));
         doctor.setEmail(resultSet.getString("email"));
-        doctor.setPhoneNumber(resultSet.getInt("phone_number"));
+        doctor.setPhoneNumber(resultSet.getLong("phone_number"));
         doctor.setAddress(resultSet.getString("address"));
         doctor.setAvatar(resultSet.getString("avatar"));
+        doctor.setProfession(resultSet.getString("profession"));
         return doctor;
     }
 

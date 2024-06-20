@@ -1,0 +1,1 @@
+alter table doctor alter column phone_number type bigint

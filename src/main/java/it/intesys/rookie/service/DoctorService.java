@@ -33,9 +33,7 @@ public class DoctorService {
     public DoctorDTO getDoctor(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
         Optional<DoctorDTO> doctorDTO = doctor.map(doctorMapper::toDataTransferObject);
-
-        DoctorDTO result = doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
-        return result;
+        return doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
 
     }
 

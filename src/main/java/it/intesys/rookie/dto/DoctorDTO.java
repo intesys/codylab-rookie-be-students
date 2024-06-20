@@ -4,9 +4,11 @@ public class DoctorDTO {
     private long id;
     private String name;
     private String surname;
+    private String address;
     private String email;
-    private long phoneNumber;
+    private String phoneNumber;
     private String profession;
+    private String avatar;
 
     public long getId() {
         return id;
@@ -40,11 +42,11 @@ public class DoctorDTO {
         this.email = email;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -56,6 +58,14 @@ public class DoctorDTO {
         this.profession = profession;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "DoctorDTO{" +
@@ -65,6 +75,15 @@ public class DoctorDTO {
                 ", email='" + email + '\'' +
                 ", phoneNumber=" + phoneNumber +
                 ", profession='" + profession + '\'' +
+                ", avatar='" + avatar + '\'' +
                 '}';
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

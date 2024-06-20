@@ -15,7 +15,7 @@ import java.util.List;
 public class DoctorApi extends RookieApi {
     private static final String API_DOCTOR = "/api/doctor";
 
-    private static final String API_DOCTOR_FILTER = API_DOCTOR + "/api/doctor/filter" ;
+    private static final String API_DOCTOR_FILTER = API_DOCTOR + "/filter" ;
     private final DoctorService doctorService;
 
     public DoctorApi(DoctorService doctorService) {
@@ -27,7 +27,7 @@ public class DoctorApi extends RookieApi {
     }
 
     @GetMapping(API_DOCTOR + "/{id}")
-    DoctorDTO getDoctor(@RequestParam Long id){
+    DoctorDTO getDoctor(@PathVariable ("id") Long id){
         return doctorService.getDoctor (id);
     }
     @PostMapping(API_DOCTOR_FILTER)

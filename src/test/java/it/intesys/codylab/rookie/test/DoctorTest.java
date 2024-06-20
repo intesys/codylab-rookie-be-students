@@ -2,7 +2,9 @@ package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.intesys.rookie.App;
+import it.intesys.rookie.dto.DoctorDTO;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
