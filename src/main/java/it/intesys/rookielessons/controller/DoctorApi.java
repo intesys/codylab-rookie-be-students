@@ -34,7 +34,7 @@ public class DoctorApi extends HospitalApi{
 
     @PutMapping(API_DOCTOR + "/{id}")
     DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
-        return doctorService.updateDoctor(id, doctor);
+        return null;
     }
 
     @DeleteMapping(API_DOCTOR + "/{id}")

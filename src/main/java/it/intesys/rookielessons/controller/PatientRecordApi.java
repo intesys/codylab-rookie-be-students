@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class patientRecordApi extends HospitalApi{
+public class PatientRecordApi extends HospitalApi{
     public static final String API_PATIENTRECORD = "/api/patientRecord";
     public static final String API_PATIENTRECORD_FILTER = API_PATIENTRECORD + "/filter";
     private final PatientRecordService patientRecordService;
 
-    public patientRecordApi(PatientRecordService patientRecordService) {
+    public PatientRecordApi(PatientRecordService patientRecordService) {
         this.patientRecordService = patientRecordService;
     }
 
