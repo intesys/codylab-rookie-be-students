@@ -4,7 +4,7 @@ public class DoctorDTO {
         private Long id;
         private String name;
         private String surname;
-        private Long phoneNumber;
+        private String phoneNumber;
         private String address;
         private String email;
         private String avatar;
@@ -34,11 +34,11 @@ public class DoctorDTO {
             this.surname = surname;
         }
 
-    public Long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

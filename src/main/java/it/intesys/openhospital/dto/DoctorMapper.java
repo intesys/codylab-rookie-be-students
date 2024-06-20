@@ -10,7 +10,7 @@ public class DoctorMapper {
         doctor.setId(doctorDTO.getId());
         doctor.setName(doctorDTO.getName());
         doctor.setSurname(doctorDTO.getSurname());
-        doctor.setPhoneNumber(doctorDTO.getPhoneNumber());
+        doctor.setPhoneNumber(Long.valueOf(doctorDTO.getPhoneNumber()));
         doctor.setAddress(doctorDTO.getAddress());
         doctor.setEmail(doctorDTO.getEmail());
         doctor.setAvatar(doctorDTO.getAvatar());
@@ -23,7 +23,7 @@ public class DoctorMapper {
         doctorDTO.setId(doctor.getId());
         doctorDTO.setName(doctor.getName());
         doctorDTO.setSurname(doctor.getSurname());
-        doctorDTO.setPhoneNumber(doctor.getPhoneNumber());
+        doctorDTO.setPhoneNumber(String.valueOf(doctor.getPhoneNumber()));
         doctorDTO.setAddress(doctor.getAddress());
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setAvatar(doctor.getAvatar());

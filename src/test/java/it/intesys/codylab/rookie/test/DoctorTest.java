@@ -15,8 +15,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import it.intesys.openhospital.dto.DoctorDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 
 @RunWith(SpringRunner.class)
