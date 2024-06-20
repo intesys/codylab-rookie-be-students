@@ -4,11 +4,12 @@ import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.dto.DoctorFilterDTO;
 import it.intesys.rookie.dto.DoctorMapper;
-import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.repository.DoctorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class DoctorService {
@@ -28,9 +29,34 @@ public class DoctorService {
         return doctorDTO;
     }
 
+    public DoctorDTO  getDoctor(Long id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        Optional<DoctorDTO> doctorDTO = doctor.map(doctorMapper::toDataTransferObject);
+        return doctorDTO.orElseThrow(() -> new NotFound(Doctor.class, id));
+    }
+    public void delDoctor(Long id) {
+        if (doctorRepository.findById (id).isEmpty()) {
+            throw new NotFound(Doctor.class, id);
+        }
+
+        doctorRepository.delete (id);
+    }
+
+    public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
+        if (doctorRepository.findById (id).isEmpty()) {
+            throw new NotFound(Doctor.class, id);
+        }
+
+        doctorDTO.setId(id);
+        Doctor doctor = doctorMapper.toEntity (doctorDTO);
+
+        doctor = doctorRepository.save (doctor);
+        doctorDTO = doctorMapper.toDataTransferObject (doctor);
+        return doctorDTO;
+    }
+
     public Page<DoctorDTO> getDoctors(DoctorFilterDTO filter, Pageable pageable) {
-        Page<Doctor> doctors = doctorRepository.findAll (filter.getName(), filter.getSurname(), filter.getProfession(), pageable);
+        Page<Doctor> doctors = doctorRepository.findAll(filter.getName(), filter.getSurname(), filter.getProfession(), pageable);
         return doctors.map(doctorMapper::toDataTransferObject);
     }
 }
-

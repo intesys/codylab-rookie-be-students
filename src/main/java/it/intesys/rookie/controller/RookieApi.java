@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class RookieApi {
-
     protected Pageable pageableOf(Integer page, Integer size, String sort) {
         if (sort != null && !sort.isBlank()) {
             Sort.Order order;
@@ -32,7 +31,6 @@ public class RookieApi {
         headers.add("X-Total-Count", Long.toString(page.getTotalElements()));
         headers.add("X-Page-Number", Long.toString(page.getNumber()));
         headers.add("X-Page-Size", Long.toString(page.getNumberOfElements()));
-
         String link = "";
         if ((page.getNumber() + 1) < page.getTotalPages()) {
             link = "<" + generateUri(baseUrl, page.getNumber() + 1, page.getSize()) + ">; rel=\"next\",";

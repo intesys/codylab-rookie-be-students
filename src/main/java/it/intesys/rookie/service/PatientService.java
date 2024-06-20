@@ -1,5 +1,6 @@
 package it.intesys.rookie.service;
 
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientMapper;
@@ -12,9 +13,10 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
-public class PatientService {
 
+public class PatientService {
     private final PatientRepository patientRepository;
+
     private final PatientMapper patientMapper;
 
     public PatientService(PatientRepository patientRepository, PatientMapper patientMapper) {
@@ -23,49 +25,49 @@ public class PatientService {
     }
 
     public PatientDTO createPatient(PatientDTO patientDTO) {
-        Patient patient = patientMapper.toEntity (patientDTO);
-
-        Instant now = Instant.now();
-        patient.setUltima_visita(Instant.now());
-
-        patient = patientRepository.save (patient);
-        patientDTO = patientMapper.toDataTrasferObject (patient);
-        return patientDTO;
-    }
-
-
-
-    public PatientDTO getPatient (Long id){
-        Optional<Patient> patient = patientRepository.findById (id);
-        Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTrasferObject);
-        return patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
-    }
-
-
-    public PatientDTO updatePatient (Long id, PatientDTO patientDTO) {
-        if (patientRepository.findById(id).isEmpty()){
-            throw new NotFound(Patient.class, id);
-        }
-        patientDTO.setId(id);
         Patient patient = patientMapper.toEntity(patientDTO);
 
-        Instant now = Instant.now();
-        patient.setUltima_visita(now);
+        Instant now  = Instant.now();
+        patient.setLastAdmission(now);
+        patient = patientRepository.save(patient);
+        patientDTO = patientMapper.toDataTransferObject(patient);
 
-        patient = patientRepository.save (patient);
-        patientDTO = patientMapper.toDataTrasferObject(patient);
         return patientDTO;
     }
-    public void deletePatient (Long id) {
-        if(patientRepository.findById (id).isEmpty()){
-            throw new NotFound(Patient.class, id);
+    public PatientDTO  getPatient(Long id) {
+        Optional<Patient> patient = patientRepository.findById(id);
+        Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
+        return patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
+    }
+    public void delPatient(Long id) {
+        if (patientRepository.findById (id).isEmpty()) {
+            throw new NotFound(Doctor.class, id);
         }
+
         patientRepository.delete (id);
     }
 
-    public Page<PatientDTO> getPatients(String filter, Pageable pageable) {
-        Page<Patient> patients = patientRepository.findAll (filter,pageable);
-        return patients.map(patientMapper::toDataTrasferObject);
+    public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
+        if (patientRepository.findById (id).isEmpty()) {
+            throw new NotFound(Patient.class, id);
+        }
+
+        patientDTO.setId(id);
+        Patient patient = patientMapper.toEntity (patientDTO);
+
+        Instant now = Instant.now();
+        patient.setLastAdmission(now);
+
+        patient = patientRepository.save (patient);
+        patientDTO = patientMapper.toDataTransferObject (patient);
+        return patientDTO;
+
     }
 
+    public Page<PatientDTO> getPatients(String filter, Pageable pageable) {
+        Page<Patient> patients = patientRepository.findAll (filter, pageable);
+        return patients.map(patientMapper::toDataTransferObject);
+
+
+    }
 }

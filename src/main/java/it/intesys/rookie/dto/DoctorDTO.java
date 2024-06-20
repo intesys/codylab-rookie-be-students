@@ -1,18 +1,25 @@
 package it.intesys.rookie.dto;
 
+import java.util.List;
+import java.util.Objects;
+
 public class DoctorDTO {
-    private long id;
+    private Long id;
     private String name;
     private String surname;
     private String email;
     private String phoneNumber;
     private String profession;
+    private String avatar;
+    private String address;
 
-    public long getId() {
+    private List<PatientDTO> latestPatients;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -56,6 +63,35 @@ public class DoctorDTO {
         this.profession = profession;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoctorDTO doctorDTO = (DoctorDTO) o;
+        return Objects.equals(id, doctorDTO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     @Override
     public String toString() {
         return "DoctorDTO{" +
@@ -66,5 +102,13 @@ public class DoctorDTO {
                 ", phoneNumber=" + phoneNumber +
                 ", profession='" + profession + '\'' +
                 '}';
+    }
+
+    public List<PatientDTO> getLatestPatients() {
+        return latestPatients;
+    }
+
+    public void setLatestPatients(List<PatientDTO> latestPatients) {
+        this.latestPatients = latestPatients;
     }
 }
