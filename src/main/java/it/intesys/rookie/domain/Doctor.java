@@ -1,5 +1,6 @@
 package it.intesys.rookie.domain;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public class Doctor {
@@ -11,6 +12,24 @@ public class Doctor {
     private String profession;
     private  String address;
     private String avatar;
+
+    public Instant getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Instant dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Instant getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Instant dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    private Instant dateCreated, dateModified;
 
     public String getAddress() {
         return address;

@@ -23,14 +23,29 @@ public class DoctorRepository extends RookieRepository {
     public DoctorRepository(JdbcTemplate db) {
         super (db);
     }
+
     public Doctor save(Doctor doctor) {
-        Long id = db.queryForObject("select nextval('doctor_sequence')", Long.class);
-        doctor.setId(id);
-        db.update("insert into doctor (id, name, surname, phone_number, email, avatar, profession, address)"+
-                        "values (?, ?, ?, ?, ?, ?, ?, ?)",doctor.getId(), doctor.getName(),doctor.getSurname(),
-                doctor.getPhoneNumber(),doctor.getEmail(),doctor.getAvatar(), doctor.getProfession(), doctor.getAddress());
-        return doctor;
+        if(doctor.getId() == null){
+            Long id = db.queryForObject("select nextval('doctor_sequence') ", Long.class);
+            doctor.setId(id);
+            db.update("insert into doctor (id, address, avatar, email, name, phone_number, profession, surname) " +
+                            "values (?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getAddress(), doctor.getAvatar(),
+                    doctor.getEmail(), doctor.getName(), doctor.getPhoneNumber(),
+                    doctor.getProfession(), doctor.getSurname());
+
+            return doctor;
+        } else {
+            int updateCount = db.update("update doctor set address = ?, avatar = ?, email = ?, name = ?, phone_number = ?, " +
+                            "profession = ?, surname = ? where id = ?", doctor.getAddress(), doctor.getAvatar(),
+                    doctor.getEmail(),  doctor.getName(), doctor.getPhoneNumber(),
+                    doctor.getProfession(), doctor.getSurname(), doctor.getId());
+            if(updateCount != 1){
+                throw new IllegalStateException(String.format("update count %id, excepted 1", updateCount));
+            }
+            return findDoctorById(doctor.getId());
+        }
     }
+
 
 
     public Optional<Doctor> findById(Long id) {

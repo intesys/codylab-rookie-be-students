@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -44,21 +45,24 @@ public class DoctorService {
 
     public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDTO) {
         Optional<Doctor> existing = doctorRepository.findById(id);
-        if (existing.isEmpty()) {
+        if(existing.isEmpty()){
             throw new NotFound(Doctor.class, id);
         }
 
         doctorDTO.setId(id);
         Doctor doctor = doctorMapper.toEntity(doctorDTO);
 
+        Instant now = Instant.now();
+        doctor.setDateModified(now);
 
-        verify(doctor);
+        verify (doctor);
         doctor = doctorRepository.save(doctor);
         doctorDTO = doctorMapper.toDataTransferObject(doctor);
         return doctorDTO;
     }
 
     private void verify(Doctor doctor) {
+
     }
 
     public void deleteDoctor(Long id) {
