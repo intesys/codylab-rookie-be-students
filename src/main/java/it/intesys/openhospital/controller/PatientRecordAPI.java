@@ -28,8 +28,14 @@ public class PatientRecordAPI extends CommonApi {
     }
 
     @PutMapping(API_PATIENT_RECORD_ID)
-    public PatientDTO updatePatientRecord(@PathVariable Long id, @RequestBody PatientRecordDTO patientRecordDTO){
+    public PatientRecordDTO updatePatientRecord(@PathVariable Long id, @RequestBody PatientRecordDTO patientRecordDTO){
         return patientRecordService.updatePatientRecord(id, patientRecordDTO);
+    }
+
+    @DeleteMapping(API_PATIENT_RECORD_ID)
+    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id){
+        patientRecordService.deleteDoctor(id);
+        return ResponseEntity.ok().build();
     }
 }
 

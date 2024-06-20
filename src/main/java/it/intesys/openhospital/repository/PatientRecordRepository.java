@@ -60,4 +60,11 @@ public class PatientRecordRepository extends CommonRepository {
         patientRecord.setTreatmentMade(resultSet.getString("treatmentmade"));
         return patientRecord;
     }
+
+    public void delete(Long id) {
+        int updateCount = db.update("delete from patient_record where id = ?", id);
+        if (updateCount != 1){
+            throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
+        }
+    }
 }

@@ -48,4 +48,12 @@ public class PatientRecordService {
         patientRecordDTO = patientRecordMapper.toDataTransferObject(patientRecord);
         return patientRecordDTO;
     }
-}
+
+    public void deleteDoctor(Long id) {
+        if (patientRecordRepository.findById(id).isEmpty()){
+            throw new NotFound(Doctor.class, id);
+        }
+        patientRecordRepository.delete(id);
+    }
+    }
+

@@ -72,11 +72,7 @@ public class PatientRepository extends CommonRepository {
         patient.setBloodGroup(bloodGroups[bloodGroupIndex]);
         patient.setNotes(resultSet.getString("notes"));
         patient.setChronicPatient(resultSet.getBoolean("chronicpatient"));
-        if(resultSet.getTimestamp("lastadmission") != null) {
-            patient.setLastAdmission(resultSet.getTimestamp("lastadmission").toInstant());
-        } else {
-            patient.setLastAdmission(null);
-        }
+        patient.setLastAdmission(Optional.ofNullable(resultSet.getTimestamp("lastadmission")).map(Timestamp::toInstant).orElse(null));
         patient.setLastDoctorVisitedId(resultSet.getLong("lastdoctorvisitedid"));
         return patient;
 
