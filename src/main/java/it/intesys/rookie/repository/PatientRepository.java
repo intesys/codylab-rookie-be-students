@@ -122,8 +122,8 @@ public class PatientRepository {
         return query.toString();
     }
     public List<Patient> findByDoctorId(Long doctorId){
-        return db.query("select patient.* from doctor_patient a" +
-                "join patient on doctor_patient.patient = patient.id"+
+        return db.query("select patient.* from doctor_patient " +
+                "join patient on doctor_patient.patient_id = patient.id "+
                 "where doctor_patient.doctor_id = ?", this::map, doctorId);
     }
     public Page<Patient> findLatestByDoctor(Doctor doctor, int limit){
