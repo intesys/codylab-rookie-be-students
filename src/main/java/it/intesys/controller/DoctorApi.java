@@ -1,6 +1,7 @@
 package it.intesys.controller;
 
 import it.intesys.dto.DoctorDTO;
+import it.intesys.dto.DoctorFilterDTO;
 import it.intesys.service.DoctorService;
 import it.intesys.service.NotFound;
 import org.springframework.data.domain.Page;
@@ -29,15 +30,11 @@ public class DoctorApi extends HospitalApi {
     }
 
     @GetMapping(API_DOCTOR + "/{id}")
-    DoctorDTO getDoctor (@PathVariable Long id) {
-        DoctorDTO doctor = doctorService.getDoctor(id);
-        return doctor;
-    }
+    DoctorDTO getDoctor (@PathVariable Long id) { return doctorService.getDoctor(id);}
 
     @PutMapping(API_DOCTOR + "/{id}")
-    DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
-        DoctorDTO doctorDTO = doctorService.updateDoctor(id, doctor);
-        return doctorDTO;
+    void updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
+        doctorService.updateDoctor(id, doctor);
     }
 
     @DeleteMapping(API_DOCTOR + "/{id}")
@@ -51,7 +48,7 @@ public class DoctorApi extends HospitalApi {
     }
 
     @PostMapping(API_DOCTOR_FILTER)
-    ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody String filter) {
+    ResponseEntity<List<DoctorDTO>> getDoctors (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody DoctorFilterDTO filter) {
         Pageable pageable = pageableOf(page, size, sort);
         Page<DoctorDTO> doctors = doctorService.getDoctors (filter, pageable);
 
