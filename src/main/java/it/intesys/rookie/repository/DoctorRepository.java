@@ -19,14 +19,13 @@ import java.util.Optional;
 
 @Repository
 
-public class DoctorRepository {
+public class DoctorRepository extends RookieRepository {
     public static final int BATCH_SIZE = 100;
-    private final JdbcTemplate db;
     private final PatientRepository patientRepository;
 
 
-    public DoctorRepository(JdbcTemplate db, PatientRepository patientRepository) {
-        this.db = db;
+    public DoctorRepository(PatientRepository patientRepository, JdbcTemplate db) {
+        super(db);
         this.patientRepository = patientRepository;
     }
     public Doctor save(Doctor doctor) {
@@ -43,7 +42,7 @@ public class DoctorRepository {
             List<Patient> patients = doctor.getPatients();
             List<Patient> currentPatients = findDoctorById(doctor.getId()).getPatients();
 
-            List<Patient> insertions = subtract(currentPatients, patients);
+            List<Patient> insertions = subtract(patients, currentPatients);
             db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, patient) -> {
                 ps.setLong(1, doctor.getId());
                 ps.setLong(2, patient.getId());
@@ -129,28 +128,5 @@ public class DoctorRepository {
         String query = pagingQuery(queryBuffer, pageable);
         List<Doctor> doctors = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(doctors, pageable, 0);
-    }
-    protected String pagingQuery(StringBuilder query, Pageable pageable) {
-        String orderSep = "";
-        Sort sort = pageable.getSort();
-        if (!sort.isEmpty()) {
-            query.append(" order by ");
-            for (Sort.Order order: sort) {
-                query.append(orderSep)
-                        .append(order.getProperty())
-                        .append(' ')
-                        .append(order.getDirection().isDescending() ? "desc" : "")
-                        .append(' ');
-                orderSep = ", ";
-            }
-        }
-
-        query.append("limit ")
-                .append(pageable.getPageSize())
-                .append(' ')
-                .append("offset ")
-                .append(pageable.getOffset());
-
-        return query.toString();
     }
 }

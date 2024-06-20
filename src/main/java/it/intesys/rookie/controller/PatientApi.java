@@ -1,5 +1,6 @@
 package it.intesys.rookie.controller;
 
+import it.intesys.rookie.dto.PatientFilterDTO;
 import it.intesys.rookie.service.NotFound;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.service.PatientService;
@@ -50,13 +51,11 @@ public class PatientApi extends RookieApi {
         return patientService.updatePatient(id, patientDTO);
     }
     @PostMapping(API_PATIENT_FILTER)
-    ResponseEntity <List<PatientDTO>> getPatients(@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @RequestBody @Nullable String filter){
+    ResponseEntity<List<PatientDTO>> getPatients(@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @RequestBody @Nullable PatientFilterDTO filter){
         Pageable pageable = pageableOf(page, size, sort);
         Page<PatientDTO> patients = patientService.getPatients(filter, pageable);
         HttpHeaders httpHeaders = paginationHeaders(patients, API_PATIENT_FILTER);
-        return ResponseEntity.ok()
-                .headers(httpHeaders)
-                .body(patients.getContent());
+        return ResponseEntity.ok().headers(httpHeaders).body(patients.getContent());
     }
 
 }

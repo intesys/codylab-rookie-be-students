@@ -19,11 +19,10 @@ import java.util.Optional;
 
 @Repository
 
-public class PatientRecordRepository {
-    private final JdbcTemplate db;
+public class PatientRecordRepository extends RookieRepository {
 
     public PatientRecordRepository(JdbcTemplate db) {
-        this.db = db;
+        super(db);
     }
     public PatientRecord save(PatientRecord patientRecord) {
         if (patientRecord.getId() == null){
@@ -91,28 +90,5 @@ public class PatientRecordRepository {
         String query = pagingQuery(queryBuffer, pageable);
         List<PatientRecord> patientRecords = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(patientRecords, pageable, 0);
-    }
-    protected String pagingQuery(StringBuilder query, Pageable pageable) {
-        String orderSep = "";
-        Sort sort = pageable.getSort();
-        if (!sort.isEmpty()) {
-            query.append(" order by ");
-            for (Sort.Order order: sort) {
-                query.append(orderSep)
-                        .append(order.getProperty())
-                        .append(' ')
-                        .append(order.getDirection().isDescending() ? "desc" : "")
-                        .append(' ');
-                orderSep = ", ";
-            }
-        }
-
-        query.append("limit ")
-                .append(pageable.getPageSize())
-                .append(' ')
-                .append("offset ")
-                .append(pageable.getOffset());
-
-        return query.toString();
     }
 }

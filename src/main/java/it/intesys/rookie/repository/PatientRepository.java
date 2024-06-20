@@ -17,11 +17,10 @@ import java.util.Optional;
 
 @Repository
 
-public class PatientRepository {
-    private final JdbcTemplate db;
+public class PatientRepository extends RookieRepository {
 
     public PatientRepository(JdbcTemplate db) {
-        this.db = db;
+        super(db);
     }
     public Patient save(Patient patient) {
         if (patient.getId() == null) {
@@ -86,40 +85,40 @@ public class PatientRepository {
             throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
     }
 
-    public Page<Patient> findAll(String filter, Pageable pageable) {
+    public Page<Patient> findAll(String text, Long id, Long opd, Long idp, Long doctorId, Pageable pageable) {
         StringBuilder queryBuffer = new StringBuilder("select * from patient ");
         List<Object> parameters = new ArrayList<>();
-        if(filter != null && !filter.isBlank()){
-            queryBuffer.append("where name like ? or surname like ? or email like ?");
-            String like = "%" + filter + "%";
-            for (int i =0; i<3; i++) parameters.add(like);
+        String whereAndOr = "where ";
+        if (text != null) {
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("name like ? or surname like ? or address like ? or email like ? or avatar like ? or notes like ?");
+            for (int i = 0; i < 6; i++) parameters.add("%" + text + "%");
+        }
+
+        if (id != null) {
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("id = ? ");
+            parameters.add(id);
+        }
+
+        if (opd != null) {
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("opd = ? ");
+            parameters.add(opd);
+        }
+
+        if (idp != null) {
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("idp = ? ");
+            parameters.add(idp);
         }
         String query = pagingQuery(queryBuffer, pageable);
         List<Patient> patients = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(patients, pageable, 0);
-    }
-    protected String pagingQuery(StringBuilder query, Pageable pageable) {
-        String orderSep = "";
-        Sort sort = pageable.getSort();
-        if (!sort.isEmpty()) {
-            query.append(" order by ");
-            for (Sort.Order order: sort) {
-                query.append(orderSep)
-                        .append(order.getProperty())
-                        .append(' ')
-                        .append(order.getDirection().isDescending() ? "desc" : "")
-                        .append(' ');
-                orderSep = ", ";
-            }
-        }
-
-        query.append("limit ")
-                .append(pageable.getPageSize())
-                .append(' ')
-                .append("offset ")
-                .append(pageable.getOffset());
-
-        return query.toString();
     }
     public List<Patient> findByDoctorId(Long doctorId){
         return db.query("select patient.* from doctor_patient " +
