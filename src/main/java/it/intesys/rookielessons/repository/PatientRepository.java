@@ -91,11 +91,4 @@ public class PatientRepository extends HospitalRepository {
         List<Patient> patients = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(patients, pageable, 0);
     }
-
-    public List<Patient> findByDoctorId (Long doctorId) {
-        return db.query("select b.* from doctor_patients a " +
-                "join patient b on a.patient_id = b.id " +
-                "where a.doctor_id = ?", this::map, doctorId);
-    }
-
 }

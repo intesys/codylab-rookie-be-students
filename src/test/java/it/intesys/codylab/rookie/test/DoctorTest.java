@@ -1,7 +1,7 @@
 package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.codylab.rookie.App;
+import it.intesys.rookielessons.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

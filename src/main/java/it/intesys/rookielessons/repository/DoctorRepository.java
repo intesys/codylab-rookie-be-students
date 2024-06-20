@@ -74,6 +74,7 @@ public class DoctorRepository extends HospitalRepository {
         doctor.setPhoneNumber(resultSet.getLong("phone_number"));
         doctor.setAddress(resultSet.getString("address"));
         doctor.setAvatar(resultSet.getString("avatar"));
+        doctor.setProfession(resultSet.getString("profession"));
         return doctor;
     }
 

@@ -130,6 +130,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
                     <imageName>ygmarchi/${project.name}:${project.version}</imageName>
                     <docker>
