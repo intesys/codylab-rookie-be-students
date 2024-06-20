@@ -35,8 +35,7 @@ public class PatientRecordService {
         Optional<PatientRecord> patientRecord = patientRecordRepository.findById(id);
         Optional<PatientRecordDTO> patientRecordDTO = patientRecord.map(patientRecordMapper::toDataTransferObject);
 
-        PatientRecordDTO result = patientRecordDTO.orElseThrow(() -> new NotFound(PatientRecord.class, id));
-        return result;
+        return patientRecordDTO.orElseThrow(() -> new NotFound(PatientRecord.class, id));
     }
 
     public PatientRecordDTO updatePatientRecord(Long id, PatientRecordDTO patientRecordDTO) {
@@ -59,12 +58,6 @@ public class PatientRecordService {
         Optional<PatientRecord> patientRecord = patientRecordRepository.deletePatientRecord(id);
         Optional<PatientRecordDTO> patientRecordDTO = patientRecord.map(patientRecordMapper::toDataTransferObject);
 
-        PatientRecordDTO result = patientRecordDTO.orElseThrow(() -> new NotFound(PatientRecord.class, id));
-        return result;
+        return patientRecordDTO.orElseThrow(() -> new NotFound(PatientRecord.class, id));
     }
-
-//    public Page<PatientRecordDTO> getPatientRecords(PatientRecordFilterDTO filter, Pageable pageable) {
-//        Page<PatientRecord> patientRecord = patientRecordRepository.findAll(filter.getId(), filter.getOpd(), filter.getIdp(), filter.getDoctorId(), filter.getText(), pageable);
-//        return patientRecord.map(patientRecordMapper::toDataTransferObject);
-//    }
 }

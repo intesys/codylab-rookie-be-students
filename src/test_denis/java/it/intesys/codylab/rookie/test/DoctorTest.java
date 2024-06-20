@@ -47,13 +47,13 @@ public class DoctorTest {
     public void testCreateDoctor() throws Exception {
         DoctorDTO doctor = createDoctor();
 
-        assertEquals(doctor.getAddress(), ADDRESS);
-        assertEquals(doctor.getAvatar(), AVATAR);
-        assertEquals(doctor.getEmail(), EMAIL);
-        assertEquals(doctor.getName(), NAME);
-        assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
-        assertEquals(doctor.getProfession(), PROFESSION);
-        assertEquals(doctor.getSurname(), SURNAME);
+        assertEquals(ADDRESS, doctor.getAddress());
+        assertEquals(AVATAR, doctor.getAvatar());
+        assertEquals(EMAIL, doctor.getEmail());
+        assertEquals(NAME, doctor.getName());
+        assertEquals(PHONE_NUMBER, doctor.getPhoneNumber());
+        assertEquals(PROFESSION, doctor.getProfession());
+        assertEquals(SURNAME, doctor.getSurname());
     }
 
     private DoctorDTO createDoctor () throws Exception {
@@ -85,12 +85,12 @@ public class DoctorTest {
 
         DoctorDTO doctor = objectMapper.readValue(response.getContentAsString(), DoctorDTO.class);
 
-        assertEquals(doctor.getAddress(), ADDRESS);
-        assertEquals(doctor.getAvatar(), AVATAR);
-        assertEquals(doctor.getEmail(), EMAIL);
-        assertEquals(doctor.getName(), NAME);
-        assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
-        assertEquals(doctor.getProfession(), PROFESSION);
-        assertEquals(doctor.getSurname(), SURNAME);
+        assertEquals(ADDRESS, doctor.getAddress());
+        assertEquals(AVATAR, doctor.getAvatar());
+        assertEquals(EMAIL, doctor.getEmail());
+        assertEquals(NAME, doctor.getName());
+        assertEquals(PHONE_NUMBER, doctor.getPhoneNumber());
+        assertEquals(PROFESSION, doctor.getProfession());
+        assertEquals(SURNAME, doctor.getSurname());
     }
 }
