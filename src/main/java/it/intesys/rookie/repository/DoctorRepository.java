@@ -95,5 +95,5 @@ public class DoctorRepository extends RookieRepository {
         return doctor;
     }
 
-    }
+}
 

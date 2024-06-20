@@ -1,20 +1,24 @@
 package it.intesys.rookie.dto;
 
-public class DoctorDTO {
-    private long id;
-    private String name;
-    private String surname;
-    private String address;
-    private String email;
-    private String phoneNumber;
-    private String profession;
-    private String avatar;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-    public long getId() {
+import java.util.List;
+
+public class DoctorDTO {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String name, surname, email, avatar, profession, address;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String phoneNumber;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<PatientDTO> latestPatients;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -42,12 +46,12 @@ public class DoctorDTO {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getProfession() {
@@ -66,6 +70,22 @@ public class DoctorDTO {
         this.address = address;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public List<PatientDTO> getLatestPatients() {
+        return latestPatients;
+    }
+
+    public void setLatestPatients(List<PatientDTO> latestPatients) {
+        this.latestPatients = latestPatients;
+    }
+
     @Override
     public String toString() {
         return "DoctorDTO{" +
@@ -73,17 +93,12 @@ public class DoctorDTO {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", profession='" + profession + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", profession='" + profession + '\'' +
+                ", address='" + address + '\'' +
+                ", phone_number=" + phoneNumber +
+                ", latestPatients=" + latestPatients +
                 '}';
     }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 }
+

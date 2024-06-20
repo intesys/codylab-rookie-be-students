@@ -1,4 +1,5 @@
 package it.intesys.rookie.controller;
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.dto.DoctorDTO;
 import it.intesys.rookie.dto.DoctorFilterDTO;
 import it.intesys.rookie.service.DoctorService;
@@ -40,6 +41,14 @@ public class DoctorApi extends RookieApi {
                 .headers(httpHeaders)
                 .body(doctors.getContent());
     }
+
+
+    @PutMapping(API_DOCTOR + "/{id}")
+    DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
+        DoctorDTO doctorDTO = doctorService.updateDoctor(id, doctor);
+        return doctorDTO;
+    }
+
 
     }
 
