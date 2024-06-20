@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 public class DoctorApi extends CommonApi{
     private final DoctorService doctorService;
@@ -33,6 +35,7 @@ public class DoctorApi extends CommonApi{
     }
     @PutMapping(API_DOCTOR_ID)
     public DoctorDTO updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
+        doctorService.updateDoctor(id, doctorDTO);
         return doctorService.updateDoctor(id, doctorDTO);
     }
 

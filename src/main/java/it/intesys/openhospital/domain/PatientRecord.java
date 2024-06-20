@@ -1,6 +1,7 @@
 package it.intesys.openhospital.domain;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class PatientRecord {
     private Long id;
@@ -65,5 +66,31 @@ public class PatientRecord {
 
     public void setTreatmentMade(String treatmentMade) {
         this.treatmentMade = treatmentMade;
+    }
+
+    @Override
+    public String toString() {
+        return "PatientRecord{" +
+                "id=" + id +
+                ", patientId=" + patientId +
+                ", doctorId=" + doctorId +
+                ", date=" + date +
+                ", typeVisit='" + typeVisit + '\'' +
+                ", reasonVisit='" + reasonVisit + '\'' +
+                ", treatmentMade='" + treatmentMade + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatientRecord that = (PatientRecord) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

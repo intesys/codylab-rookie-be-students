@@ -43,6 +43,8 @@ public class PatientRecordService {
             throw new NotFound(Patient.class, id);
         }
         patientRecordDTO.setId(id);
+        Instant now = Instant.now();
+        patientRecordDTO.setDate(now);
         PatientRecord patientRecord = patientRecordMapper.toEntity(patientRecordDTO);
         patientRecord = patientRecordRepository.save(patientRecord);
         patientRecordDTO = patientRecordMapper.toDataTransferObject(patientRecord);

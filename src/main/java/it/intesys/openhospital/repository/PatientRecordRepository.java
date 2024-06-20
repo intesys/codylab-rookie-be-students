@@ -31,7 +31,7 @@ public class PatientRecordRepository extends CommonRepository {
             }
             return patientRecord;
         } else {
-            int updateCount = db.update("update patient_record set patientId = ?, doctorId = ?, date = ?, typeVisit = ?, reasonVisit = ?, treatmentMade = ? where id = ?", patientRecord.getPatientId(), patientRecord.getDoctorId(), patientRecord.getDate(), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(),
+            int updateCount = db.update("update patient_record set patientId = ?, doctorId = ?, date = ?, typeVisit = ?, reasonVisit = ?, treatmentMade = ? where id = ?", patientRecord.getPatientId(), patientRecord.getDoctorId(), Timestamp.from(patientRecord.getDate()), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(),
                     patientRecord.getTreatmentMade(), patientRecord.getId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
