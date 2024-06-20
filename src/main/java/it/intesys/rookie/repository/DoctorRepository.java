@@ -2,7 +2,6 @@ package it.intesys.rookie.repository;
 
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
-import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.utilities.Utilities;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;

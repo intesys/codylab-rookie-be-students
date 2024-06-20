@@ -33,7 +33,8 @@ public class PatientRecordRepository extends RookieRepository {
             patientRecord.setId(id);
 
             db.update("insert into patient_record (id, patient_id, doctor_id, date, type_visit, reason_visit, treatment_made) " +
-                    "values (?, ?, ?, ?, ?, ?, ?)", patientRecord.getId(), patientRecord.getPatientId(), patientRecord.getDoctorId(), Timestamp.from(patientRecord.getDate()), patientRecord.getTypeVisit(), patientRecord.getReasonVisit(), patientRecord.getTreatmentMade());
+                    "values (?, ?, ?, ?, ?, ?, ?)", patientRecord.getId(), patientRecord.getPatientId(), patientRecord.getDoctorId(), Timestamp.from(patientRecord.getDate()),
+                    patientRecord.getTypeVisit(), patientRecord.getReasonVisit(), patientRecord.getTreatmentMade());
 
             Integer count = db.queryForObject("select count(*) from doctor_patient where doctor_id = ? and patient_id = ?", Integer.class, patientRecord.getDoctorId(), patientRecord.getPatientId());
             if (count == null || count == 0)

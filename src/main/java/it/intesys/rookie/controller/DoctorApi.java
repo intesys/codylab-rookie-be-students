@@ -39,8 +39,8 @@ public class DoctorApi extends Utilities {
     }
 
     @PutMapping(API_ACCOUNT + "/{id}")
-    DoctorDTO updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
-        return doctorService.updateDoctor(id, doctor);
+    void updateDoctor (@PathVariable Long id, @RequestBody DoctorDTO doctor) {
+        doctorService.updateDoctor(id, doctor);
     }
 
     @DeleteMapping(API_ACCOUNT + "/{id}")
