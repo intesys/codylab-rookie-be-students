@@ -1,7 +1,7 @@
 package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.codylab.rookie.App;
+import it.intesys.rookielessons.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
-import javax.print.Doc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
