@@ -8,24 +8,10 @@ public class PatientDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id, phoneNumber;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant firstAdmission, lastAdmission;
+    private Instant lastAdmission;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String name, surname, email;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private StatusDTO status;
+    private String name, surname, email, address;
 
-    @Override
-    public String toString() {
-        return "PatientDTO{" +
-                "id=" + id +
-                ", firstAdmission=" + firstAdmission +
-                ", lastAdmission=" + lastAdmission +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 
     public Long getId() {
         return id;
@@ -33,14 +19,6 @@ public class PatientDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Instant getFirstAdmission() {
-        return firstAdmission;
-    }
-
-    public void setFirstAdmission(Instant firstAdmission) {
-        this.firstAdmission = firstAdmission;
     }
 
     public Instant getLastAdmission() {
@@ -83,11 +61,24 @@ public class PatientDTO {
         this.email = email;
     }
 
-    public StatusDTO getStatus() {
-        return status;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStatus(StatusDTO status) {
-        this.status = status;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "PatientDTO{" +
+                "id=" + id +
+                ", phoneNumber=" + phoneNumber +
+                ", lastAdmission=" + lastAdmission +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

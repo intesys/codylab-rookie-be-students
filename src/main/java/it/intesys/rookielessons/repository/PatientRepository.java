@@ -26,15 +26,14 @@ public class PatientRepository extends HospitalRepository {
         if(patient.getId() == null){
             Long id = db.queryForObject("select nextval('patient_sequence') ", Long.class);
             patient.setId(id);
-            db.update("insert into patient (id, first_admission, last_admission, phone_number, name, surname, email, status) " +
-                            "values (?, ?, ?, ?, ?, ?, ?, ?)", patient.getId(), Timestamp.from(patient.getFirstAdmission()),
-                    Timestamp.from(patient.getLastAdmission()), patient.getPhoneNumber(), patient.getName(), patient.getSurname(),
-                    patient.getEmail(), patient.getStatus().ordinal());
+            db.update("insert into patient (id, last_admission, phone_number, name, surname, email, status) " +
+                            "values (?, ?, ?, ?, ?, ?)", patient.getId(), Timestamp.from(patient.getLastAdmission()), patient.getPhoneNumber(),
+                    patient.getName(), patient.getSurname(), patient.getEmail());
             return patient;
         } else {
-            int updateCount = db.update("update patient set last_admission = ?, phone_number = ?, name = ?, surname = ?, email = ?, " +
+            int updateCount = db.update("update patient set last_admission = ?, name = ?, surname = ?, email = ?, " +
                             "status = ? where id = ?", Timestamp.from(patient.getLastAdmission()), patient.getPhoneNumber(), patient.getName(),
-                    patient.getSurname(), patient.getEmail(), patient.getStatus().ordinal(), patient.getId());
+                    patient.getSurname(), patient.getEmail(), patient.getId());
             if(updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, excepted 1", updateCount));
             }
@@ -67,15 +66,12 @@ public class PatientRepository extends HospitalRepository {
     private Patient map(ResultSet resultSet, int i) throws SQLException {
         Patient patient = new Patient();
         patient.setId(resultSet.getLong("id"));
-        patient.setFirstAdmission(Optional.ofNullable(resultSet.getTimestamp("first_admission")).map(Timestamp::toInstant).orElse(null));
         patient.setLastAdmission(Optional.ofNullable(resultSet.getTimestamp("last_admission")).map(Timestamp::toInstant).orElse(null));
         patient.setPhoneNumber(resultSet.getLong("phone_number"));
         patient.setName(resultSet.getString("name"));
         patient.setSurname(resultSet.getString("surname"));
         patient.setEmail(resultSet.getString("email"));
-        Status[] statuses = Status.values();
-        int statusIndex = resultSet.getInt("status");
-        patient.setStatus(statuses[statusIndex]);
+
         return patient;
     }
 
@@ -83,7 +79,7 @@ public class PatientRepository extends HospitalRepository {
         StringBuilder queryBuffer = new StringBuilder("select * from patient ");
         List<Object> parameters = new ArrayList<>();
         if (filter != null && !filter.isBlank()) {
-            queryBuffer.append("where name like ? or surname like ? or email like ? or phone_number like ?");
+            queryBuffer.append("where name like ? or surname like ? or email like ?");
             String like = "%" + filter + "%";
             for (int i = 0; i < 4; i++) parameters.add(like);
         }

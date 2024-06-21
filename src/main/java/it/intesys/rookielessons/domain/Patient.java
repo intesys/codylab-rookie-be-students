@@ -5,23 +5,9 @@ import java.util.Objects;
 
 public class Patient {
     private Long id, phoneNumber;
-    private Instant firstAdmission, lastAdmission;
-    private String name, surname, email;
-    private Status status;
+    private Instant lastAdmission;
+    private String name, surname, email, address;
 
-    @Override
-    public String toString() {
-        return "Patient{" +
-                "id=" + id +
-                ", firstAdmission=" + firstAdmission +
-                ", lastAdmission=" + lastAdmission +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", status" + status + '\'' +
-                '}';
-    }
 
     public Long getId() {
         return id;
@@ -29,14 +15,6 @@ public class Patient {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Instant getFirstAdmission() {
-        return firstAdmission;
-    }
-
-    public void setFirstAdmission(Instant firstAdmission) {
-        this.firstAdmission = firstAdmission;
     }
 
     public Instant getLastAdmission() {
@@ -78,12 +56,25 @@ public class Patient {
         this.email = email;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", phoneNumber=" + phoneNumber +
+                ", lastAdmission=" + lastAdmission +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 
     @Override
