@@ -10,6 +10,7 @@
 
     <properties>
         <docker.password></docker.password>
+        <docker.user></docker.user>
         <flyway.version>9.8.1</flyway.version>
             <jackson.version>2.17.1</jackson.version>
         <maven.compiler.source>17</maven.compiler.source>
@@ -125,7 +126,7 @@
         <plugins>
             <!--
                 set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17.0.4.1+1
-                mvn spring-boot:build-image -Ddocker.password=?
+                mvn spring-boot:build-image -Ddocker.user=? -Ddocker.password=?
                 docker push  ygmarchi/codylab-rookie:1.0-SNAPSHOT
             -->
             <plugin>
@@ -136,7 +137,7 @@
                     <imageName>ygmarchi/${project.name}:${project.version}</imageName>
                     <docker>
                         <publishRegistry>
-                            <username>carlo.marchiori@gmail.com</username>
+                            <username>${docker.user}</username>
                             <password>${docker.password}</password>
                         </publishRegistry>
                     </docker>
