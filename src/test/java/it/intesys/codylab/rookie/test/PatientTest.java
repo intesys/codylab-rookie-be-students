@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.intesys.codylab.rookie.App;
+import it.intesys.rookie.App;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
