@@ -1,9 +1,7 @@
 package it.intesys.rookie.dto;
 
 import it.intesys.rookie.domain.Doctor;
-import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.repository.PatientRepository;
-import it.intesys.rookie.service.NotFound;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

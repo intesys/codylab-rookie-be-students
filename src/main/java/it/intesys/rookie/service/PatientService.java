@@ -5,6 +5,7 @@ import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientFilterDTO;
 import it.intesys.rookie.dto.PatientMapper;
+import it.intesys.rookie.repository.DoctorRepository;
 import it.intesys.rookie.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +17,13 @@ import java.util.Optional;
 @Service
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
     private final PatientMapper patientMapper;
 
 
-    public PatientService(PatientRepository patientRepository, PatientMapper patientMapper) {
+    public PatientService(PatientRepository patientRepository, DoctorRepository doctorRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
         this.patientMapper = patientMapper;
     }
 
@@ -36,7 +39,7 @@ public class PatientService {
     }
 
     public PatientDTO getPatient(Long id) {
-        Optional<Patient> patient = patientRepository.findById(id);
+        Optional<Patient> patient = patientRepository.findPatientById(id);
         Optional<PatientDTO> patientDTO = patient.map(patientMapper::toDataTransferObject);
 
         PatientDTO result = patientDTO.orElseThrow(() -> new NotFound(Patient.class, id));
@@ -44,7 +47,7 @@ public class PatientService {
     }
 
     public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
-        if(patientRepository.findById(id).isEmpty()){
+        if(patientRepository.findPatientById(id).isEmpty()){
             throw new NotFound(Patient.class, id);
         }
 
@@ -68,7 +71,7 @@ public class PatientService {
     }
 
     public Page<PatientDTO> getPatients(PatientFilterDTO filter, Pageable pageable) {
-        Page<Patient> patient = patientRepository.findAll(filter.getId(), filter.getOpd(), filter.getIdp(), filter.getLastDoctorVisitedId(), filter.getText(), pageable);
+        Page<Patient> patient = patientRepository.findAll(filter.getId(), filter.getOpd(), filter.getIdp(), filter.getDoctorId(), filter.getText(), pageable);
         return patient.map(patientMapper::toDataTransferObject);
     }
 }

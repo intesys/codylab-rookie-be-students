@@ -4,9 +4,7 @@ import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.utilities.Utilities;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -66,7 +64,7 @@ public class DoctorRepository extends RookieRepository{
         }
     }
 
-    private Doctor findDoctorById(Long id) {
+    Doctor findDoctorById(Long id) {
         Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
         if (doctor != null) {
             List<Patient> patients = patientRepository.findByDoctorId(id);
@@ -126,5 +124,28 @@ public class DoctorRepository extends RookieRepository{
         String query = Utilities.pagingQuery(queryBuffer, pageable);
         List<Doctor> doctors = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(doctors, pageable, 0);
+    }
+
+    public Page<Doctor> findLatestByPatient(Patient patient, int size) {
+        StringBuilder queryBuffer = new StringBuilder("select doctor.* from patient_record" +
+                " join doctor on doctor.id = patient_record.doctor_id" +
+                " where patient_record.patient_id = ?");
+
+        List<Object> parameters = List.of(patient.getId());
+
+        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        String query = pagingQuery(queryBuffer, pageable);
+
+        List<Doctor> doctors = db.query(query, this::map, parameters.toArray(Object[]::new));
+        return new PageImpl<>(doctors, pageable, 0);
+    }
+    public List<Doctor> findByPatient(Patient patient) {
+        String query = "select doctor.* from doctor_patient" +
+                " join doctor on doctor.id = doctor_patient.doctor_id" +
+                " where doctor_patient.patient_id = ?";
+
+        List<Object> parameters = List.of(patient.getId());
+
+        return db.query(query, this::map, parameters.toArray(Object[]::new));
     }
 }

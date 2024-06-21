@@ -1,7 +1,9 @@
 package it.intesys.rookie.dto;
 
 import it.intesys.rookie.domain.BloodGroup;
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+import it.intesys.rookie.repository.DoctorRepository;
 import it.intesys.rookie.repository.PatientRecordRepository;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +13,12 @@ import java.util.Optional;
 public class PatientMapper {
 
     private final PatientRecordRepository patientRecordRepository;
+    private final DoctorRepository doctorRepository;
     private final PatientRecordMapper patientRecordMapper;
 
-    public PatientMapper(PatientRecordRepository patientRecordRepository, PatientRecordMapper patientRecordMapper) {
+    public PatientMapper(PatientRecordRepository patientRecordRepository, DoctorRepository doctorRepository, PatientRecordMapper patientRecordMapper) {
         this.patientRecordRepository = patientRecordRepository;
+        this.doctorRepository = doctorRepository;
         this.patientRecordMapper = patientRecordMapper;
     }
 
@@ -35,6 +39,7 @@ public class PatientMapper {
         patient.setNotes(patientDTO.getNotes());
         patient.setBloodGroup(Optional.ofNullable(patientDTO.getBloodGroup()).map(b -> BloodGroup.valueOf(b.name())).orElse(null));
         patient.setChronicPatient(patientDTO.getChronicPatient());
+        patient.setDoctors(patientDTO.getDoctorIds().stream().map(doctorRepository::findById).map(Optional::get).toList());
         return patient;
 
     }
@@ -42,7 +47,7 @@ public class PatientMapper {
     public PatientDTO toDataTransferObject(Patient patient){
         PatientDTO patientDTO = new PatientDTO();
         patientDTO.setId(patient.getId());
-        patientDTO.setPhoneNumber(String.valueOf(patient.getPhoneNumber()));
+        patientDTO.setPhoneNumber(patient.getPhoneNumber());
         patientDTO.setOpd(patient.getOpd());
         patientDTO.setIdp(patient.getIdp());
         patientDTO.setLastDoctorVisitedId(patient.getLastDoctorVisitedId());
@@ -55,9 +60,8 @@ public class PatientMapper {
         patientDTO.setNotes(patient.getNotes());
         patientDTO.setBloodGroup(BloodGroupDTO.valueOf(patient.getBloodGroup().name()));
         patientDTO.setChronicPatient(patient.getChronicPatient());
-        patientDTO.setPatientRecords(patientRecordRepository.findLatestByPatient(patient, 5)
-                .stream()
-                .map(patientRecordMapper::toDataTransferObject).toList());
+        patientDTO.setPatientRecords(patientRecordRepository.findLatestByPatient(patient, 5).stream().map(patientRecordMapper::toDataTransferObject).toList());;
+        patientDTO.setDoctorIds(doctorRepository.findByPatient(patient).stream().map(Doctor::getId).toList());
         return patientDTO;
 
     }

@@ -1,7 +1,9 @@
 package it.intesys.rookie.controller;
 
+import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.dto.PatientDTO;
 import it.intesys.rookie.dto.PatientFilterDTO;
+import it.intesys.rookie.repository.DoctorRepository;
 import it.intesys.rookie.service.NotFound;
 import it.intesys.rookie.service.PatientService;
 import it.intesys.rookie.utilities.Utilities;
@@ -39,8 +41,8 @@ public class PatientApi extends Utilities{
     }
 
     @PutMapping(API_ACCOUNT + "/{id}")
-    PatientDTO updatePatient (@PathVariable Long id, @RequestBody PatientDTO patient) {
-        return patientService.updatePatient(id, patient);
+    void updatePatient (@PathVariable Long id, @RequestBody PatientDTO patient) {
+        patientService.updatePatient(id, patient);
     }
 
     @DeleteMapping(API_ACCOUNT + "/{id}")
@@ -54,11 +56,12 @@ public class PatientApi extends Utilities{
     }
 
     @PostMapping(API_ACCOUNT + "/filter")
-    ResponseEntity<List<PatientDTO>> getPatient (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody PatientFilterDTO filter){
+    ResponseEntity<List<PatientDTO>> getPatients (@RequestParam ("page") int page, @RequestParam ("size") int size, @RequestParam ("sort") String sort, @Nullable @RequestBody PatientFilterDTO filter){
         Pageable pageable = pageableOf(page, size, sort);
         Page<PatientDTO> patient = patientService.getPatients(filter, pageable);
 
         HttpHeaders httpHeaders = paginationHeaders(patient, API_ACCOUNT + "/filter");
+
         return ResponseEntity.ok().headers(httpHeaders).body(patient.getContent());
     }
 }

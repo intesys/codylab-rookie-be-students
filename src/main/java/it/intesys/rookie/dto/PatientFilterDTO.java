@@ -1,7 +1,7 @@
 package it.intesys.rookie.dto;
 
 public class PatientFilterDTO {
-    private Long id, opd, idp, lastDoctorVisitedId;
+    private Long id, opd, idp, doctorId;
     private String text;
 
     public Long getId() {
@@ -28,12 +28,12 @@ public class PatientFilterDTO {
         this.idp = idp;
     }
 
-    public Long getLastDoctorVisitedId() {
-        return lastDoctorVisitedId;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
-    public void setLastDoctorVisitedId(Long lastDoctorVisitedId) {
-        this.lastDoctorVisitedId = lastDoctorVisitedId;
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
     }
 
     public String getText() {

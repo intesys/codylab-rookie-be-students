@@ -11,6 +11,7 @@ public class Patient {
     private String name, surname, email, address, avatar, notes;
     private Boolean chronicPatient;
     private BloodGroup bloodGroup;
+    private List<Doctor> doctors;
     private List<PatientRecord> patientRecords;
 
     @Override
@@ -30,6 +31,7 @@ public class Patient {
                 ", notes='" + notes + '\'' +
                 ", chronicPatient=" + chronicPatient +
                 ", bloodGroup=" + bloodGroup +
+                ", doctorIds=" + doctors +
                 ", patientRecords=" + patientRecords +
                 '}';
     }
@@ -152,6 +154,17 @@ public class Patient {
 
     public void setPatientRecords(List<PatientRecord> patientRecords) {
         this.patientRecords = patientRecords;
+    }
+
+    public List<Doctor> getDoctors() {
+        if(doctors == null){
+            doctors = new ArrayList<>();
+        }
+        return doctors;
+    }
+
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
     }
 
     @Override

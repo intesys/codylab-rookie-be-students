@@ -99,7 +99,7 @@ public class PatientRecordRepository extends RookieRepository {
 
         List<Object> parameters = List.of(patient.getId());
 
-        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        PageRequest pageable = PageRequest.of(0, 1, Sort.by(Sort.Order.desc("date")));
         String query = pagingQuery(queryBuffer, pageable);
 
         List<PatientRecord> patients = db.query(query, this::map, parameters.toArray(Object[]::new));

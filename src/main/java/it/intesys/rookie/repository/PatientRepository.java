@@ -4,6 +4,10 @@ import it.intesys.rookie.domain.BloodGroup;
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import it.intesys.rookie.utilities.Utilities;
+import jakarta.annotation.PostConstruct;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,9 +21,12 @@ import java.util.Optional;
 @Repository
 public class PatientRepository extends Utilities{
     private final JdbcTemplate db;
+    private final ApplicationContext applicationContext;
+    private DoctorRepository doctorRepository;
 
-    public PatientRepository(JdbcTemplate db) throws SQLException {
+    public PatientRepository(JdbcTemplate db, ApplicationContext applicationContext) throws SQLException {
         this.db = db;
+        this.applicationContext = applicationContext;
     }
 
     public Patient save(Patient patient) {
@@ -32,28 +39,51 @@ public class PatientRepository extends Utilities{
                     patient.getId(), patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(),
                     patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(), patient.getAvatar(), patient.getBloodGroup().ordinal(),
                     patient.getNotes(), patient.getChronicPatient(), Timestamp.from(patient.getLastAdmission()));
-
-            return patient;
         }  else {
-            db.update("update patient set odp = ?, idp = ?, name = ?, surname = ?, phone_number = ?, address = ?, email = ?, avatar = ?, blood_group = ?, notes = ?, chronicpatient = ? where id = ?",
-                    patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(), patient.getAvatar(), patient.getBloodGroup(), patient.getNotes(), patient.getChronicPatient(), patient.getId());
-            return findOriginalAccountById(patient.getId());
+
+            db.update("update patient set opd = ?, idp = ?, name = ?, surname = ?, phone_number = ?, " +
+                            "address = ?, email = ?, avatar = ?, blood_group = ?, notes = ?, chronicpatient = ? " +
+                            "where id = ?",
+                    patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(),
+                    patient.getAddress(), patient.getEmail(), patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(),
+                    patient.getId());
+
         }
+
+        List<Doctor> doctors = patient.getDoctors();
+        List<Doctor> currentDoctors = patient.getId() == null? List.of(): doctorRepository.findByPatient(patient);
+
+
+        List<Doctor> insertions = RookieRepository.subtract(doctors, currentDoctors);
+        db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, 100, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+
+        List<Doctor> deletions = RookieRepository.subtract(currentDoctors, doctors);
+        db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, 100, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+
+        if (patient.getId() == null) {
+            return patient;
+        }
+        return findOriginalPatientById(patient.getId());
     }
 
-    public Optional<Patient> findById(Long id) {
+    public Optional<Patient> findPatientById(Long id) {
+
         try{
             Patient patient = db.queryForObject("select * from patient where id = ?", this::map, id);
             return Optional.ofNullable(patient);
         } catch (EmptyResultDataAccessException e){
-            System.out.println("FOUND ERROR\nPatient with id = " + id);
             return Optional.empty();
         }
     }
 
-    private Patient findOriginalAccountById(Long id) {
-        Patient patient = db.queryForObject("select * from patient where id = ?", this::map, id);
-        return patient;
+    private Patient findOriginalPatientById(Long id) {
+        return db.queryForObject("select * from patient where id = ?", this::map, id);
     }
 
     public Optional<Patient> deletePatient(Long id) {
@@ -87,16 +117,17 @@ public class PatientRepository extends Utilities{
         return patient;
     }
 
-    public Page<Patient> findAll(Long id, Long opd, Long idp, Long lastDoctorVisitedId, String text, Pageable pageable) {
+    public Page<Patient> findAll(Long id, Long opd, Long idp, Long doctorId, String text, Pageable pageable) {
         String whereOrAnd = "where ";
         StringBuilder queryBuffer = new StringBuilder("select * from patient ");
         List<Object> parameters = new ArrayList<>();
 
 
-        if (lastDoctorVisitedId != null) {
-            queryBuffer.append(whereOrAnd).append("last_doctor_visited_id = ? ");
+        if (doctorId != null) {
+            queryBuffer.append("join doctor_patient on id = patient_id ");
+            queryBuffer.append(whereOrAnd).append("doctor_id = ? ");
             whereOrAnd = "and ";
-            parameters.add(lastDoctorVisitedId);
+            parameters.add(doctorId);
         }
 
         if (id != null) {
@@ -145,5 +176,10 @@ public class PatientRepository extends Utilities{
 
         List<Patient> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
         return new PageImpl<>(patients, pageable, 0);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    synchronized void init () {
+        doctorRepository = applicationContext.getBean(DoctorRepository.class);
     }
 }
