@@ -1,13 +1,14 @@
 package hospital.repository;
 
+import hospital.domain.Doctor;
 import hospital.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,52 +19,35 @@ public class PatientRepository extends CommonRepository{
     }
 
     public Patient save(Patient patient) {
-        Long id = db.queryForObject("select nextval(account_sequence) ", Long.class);
-        patient.setId(id);
-        db.update ("insert into account (id, address, idp, opd, phoneNumber, notes, chronicPatient, lastAdmission, lastDoctorVisitedId, patientRecords, doctorIds, name, surname, email)" +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                patient.getId(),
-                patient.getAddress(),
-                patient.getIdp(),
-                patient.getOpd(),
-                patient.getPhoneNumber(),
-                patient.getNotes(),
-                patient.getChronicPatient(),
-                patient.getLastAdmission(),
-                patient.getLastDoctorVisitedId(),
-                patient.getPatientRecords(),
-                patient.getDoctorIds(),
-                patient.getAvatar(),
-                patient.getName(),
-                patient.getSurname(),
-                patient.getEmail());
-
-//        List<Patient> patients = doctor.getPatients();
-//        List<Patient> currentPatients = getDoctor(doctor.getId()).getPatients();
-//
-//
-//        List<Patient> insertions = subtract(patients, currentPatients);
-//        db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, patient) -> {
-//            ps.setLong(1, doctor.getId());
-//            ps.setLong(2, patient.getId());
-//        });
-//
-//        List<Patient> deletions = subtract(currentPatients, patients);
-//        db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, BATCH_SIZE, (ps, account) -> {
-//            ps.setLong(1, doctor.getId());
-//            ps.setLong(2, account.getId());
-//        });
-        return patient;
+        if (patient.getId() == null) {
+            Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
+            patient.setId(id);
+            db.update("Insert into patient (id, opd, idp, name, surname, phoneNumber, address, email, avatar, bloodGroup, notes, chronicPatient, LastAdmission, lastDoctorVisitedId)" +
+                            "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", patient.getId(), patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
+                    patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastAdmission(), patient.getLastDoctorVisitedId());
+            return patient;
+        } else {
+            int updateCount = db.update("update patient set opd = ?, idp = ?, name = ?, surname= ?, phoneNumber = ?, address = ?, email = ?, avatar = ?, bloodGroup = ?, notes = ?, chronicPatient = ?,  lastDoctorVisitedId = ?, where id = ?", patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
+                    patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getId());
+            if (updateCount != 1){
+                throw new IllegalStateException(String.format("Update count %d, excepted 1", updateCount));
+            }
+            return getPatient(patient.getId());
+        }
     }
 
     public Optional<Patient> findById(Long id) {
         try {
-            Patient patient = db.queryForObject("select * from patient where id = ?", this::map, id);
+            Patient patient = getPatient(id);
             return Optional.ofNullable(patient);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e){
             return Optional.empty();
         }
+    }
 
+    protected Patient getPatient(Long id) {
+        Patient patient = db.queryForObject("select * from patient where id = ?", this::map, id);
+        return patient;
     }
 
     private Patient map (ResultSet resultSet, int i) throws SQLException {
@@ -90,7 +74,66 @@ public class PatientRepository extends CommonRepository{
     public void delete(Long id) {
     }
 
-    public Page<Patient> findAll(String filter, Long id, Long opd, Long idp, Long doctorId, Pageable pageable) {
-        return null;
+    public Page<Patient> findAll(String filter, Long id, Long opd, Long idp, Long doctorId, String text, Pageable pageable) {
+        StringBuilder queryBuffer = new StringBuilder("select * from patient a ");
+        List<Object> parameters = new ArrayList<>();
+        String whereAndOr = "where ";
+        if (doctorId != null){
+            queryBuffer.append("join doctor_patient b on b.patientid = a.id ") .append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("b.doctorid = ? ");
+            parameters.add(doctorId);
+        }
+
+        if (text != null){
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("name like ? or surname like ? or address like ? or email like ? or avatar like ? or notes like ?");
+            for (int i = 0; i < 6; i++) parameters.add("%" + text + "%");
+        }
+
+        if (id != null){
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("id = ? ");
+            parameters.add(id);
+        }
+
+        if (opd != null){
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("opd = ? ");
+            parameters.add(opd);
+        }
+
+        if (idp != null){
+            queryBuffer.append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("idp = ? ");
+            parameters.add(idp);
+        }
+
+        String query = pagingQuery(queryBuffer, pageable);
+        List<Patient> patients = db.query(query, this::map, parameters.toArray());
+        return new PageImpl<>(patients, pageable, 0);
+    }
+    public List<Patient> findByDoctorId(Long doctorId) {
+        return db.query("select patient.* from doctor_patient " +
+                "join patient on doctor_patient.patient_id = patient.id " +
+                "where doctor_patient.doctor_id = ?", this::map, doctorId);
+    }
+
+    public Page<Patient> findLatestByDoctor(Doctor doctor, int size){
+        StringBuilder queryBuffer = new StringBuilder("select patient.* from patient_record" +
+                " join patient on patient.id = patient_record.patientid" +
+                " where patient_record.doctorid = ?");
+
+        List<Object> parameters = List.of(doctor.getId());
+
+        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        String query = pagingQuery(queryBuffer, pageable);
+
+        List<Patient> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
+        return new PageImpl<>(patients, pageable, 0);
     }
 }

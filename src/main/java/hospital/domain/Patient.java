@@ -15,24 +15,10 @@ public class Patient {
     private List patientRecords;
     private Long doctorIds;
     private String avatar;
-
-    public Object getChronicPatient() {
-        return null;
-    }
-
-    private enum bloodGroup{
-        ZERO_PLUS,
-        ZERO_MINUS,
-        A_PLUS,
-        A_MINUS,
-        B_PLUS,
-        B_MINUS,
-        AB_PLUS,
-        AB_MINUS,
-    }
     private String name;
     private String surname;
     private String email;
+    private BloodGroup bloodGroup;
 
     public Long getId() {
         return id;
@@ -85,9 +71,20 @@ public class Patient {
     public boolean isChronicPatient() {
         return chronicPatient;
     }
+    public Object getChronicPatient() {
+        return chronicPatient;
+    }
 
     public void setChronicPatient(boolean chronicPatient) {
         this.chronicPatient = chronicPatient;
+    }
+
+    public BloodGroup getBloodGroup() {
+        return bloodGroup;
+    }
+
+    public void setBloodGroup(BloodGroup bloodGroup) {
+        this.bloodGroup = bloodGroup;
     }
 
     public String getLastAdmission() {

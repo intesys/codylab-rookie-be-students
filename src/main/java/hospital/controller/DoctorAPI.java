@@ -35,7 +35,6 @@ public class DoctorAPI extends CommonAPI {
     @PutMapping(API_DOCTOR_ID)
     void updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
         doctorService.updateDoctor(id, doctorDTO);
-        // return doctorService.updateDoctor(id, doctorDTO);
     }
 
     @PostMapping(API_DOCTOR_FILTER)

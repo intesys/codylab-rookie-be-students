@@ -45,7 +45,7 @@ public class PatientService {
     }
 
     public Page<PatientDTO> getPatients(PatientFilterDTO filter, Pageable pageable) {
-        Page<Patient> patients = patientRepository.findAll(filter.getText(), filter.getId(), filter.getOpd(), filter.getIdp(), filter.getDoctorId(), pageable);
+        Page<Patient> patients = patientRepository.findAll(filter.getText(), filter.getId(), filter.getOpd(), filter.getIdp(), filter.getDoctorId(), filter.getText(), pageable);
         return patients.map(patientMapper::toDataTransferObject);
     }
 
