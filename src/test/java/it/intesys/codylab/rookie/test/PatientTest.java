@@ -56,7 +56,6 @@ public class PatientTest {
     public static final long OPD2 = 4L;
     @Autowired
     private WebApplicationContext applicationContext;
-    private
     ObjectMapper objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
     private MockMvc mockMvc;
@@ -71,7 +70,6 @@ public class PatientTest {
     public void testCreatePatient() throws Exception {
         List<DoctorDTO> doctors = createDoctors();
         List<DoctorDTO> someDoctors = List.of(doctors.get(0), doctors.get(2));
-
         PatientDTO patient = createPatient(someDoctors);
 
         assertEquals(ADDRESS, patient.getAddress());
@@ -209,7 +207,7 @@ public class PatientTest {
     }
 
     @NotNull
-    private PatientDTO newPatient(List<DoctorDTO> doctors) {
+    static PatientDTO newPatient(List<DoctorDTO> doctors) {
         PatientDTO patient = new PatientDTO();
         patient.setAddress(ADDRESS);
         patient.setAvatar(AVATAR);
