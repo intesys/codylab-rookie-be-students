@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RookieRepository {
     protected final JdbcTemplate db;
     protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,4 +40,10 @@ public class RookieRepository {
 
         return query.toString();
     }
+    protected <T> List<T> subtract(List<T> from, List<T> what) {
+        ArrayList<T> clone = new ArrayList<>(from);
+        clone.removeAll(what);
+        return clone;
+    }
+
 }

@@ -2,7 +2,6 @@ package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.intesys.rookie.App;
@@ -57,9 +56,7 @@ public class PatientTest {
     public static final long OPD2 = 4L;
     @Autowired
     private WebApplicationContext applicationContext;
-    private  ObjectMapper objectMapper = JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .build();
+    private final ObjectMapper objectMapper = JsonMapper.builder ().addModule(new JavaTimeModule()).build();
 
     private MockMvc mockMvc;
 
@@ -210,7 +207,7 @@ public class PatientTest {
     }
 
     @NotNull
-    private PatientDTO newPatient(List<DoctorDTO> doctors) {
+    public static PatientDTO newPatient(List<DoctorDTO> doctors) {
         PatientDTO patient = new PatientDTO();
         patient.setAddress(ADDRESS);
         patient.setAvatar(AVATAR);
@@ -228,7 +225,7 @@ public class PatientTest {
     }
 
     @NotNull
-    private PatientDTO newPatient2() {
+    public static PatientDTO newPatient2() {
         PatientDTO patient = new PatientDTO();
         patient.setAddress(ADDRESS2);
         patient.setAvatar(AVATAR2);
@@ -245,6 +242,10 @@ public class PatientTest {
     }
 
     private PatientDTO createPatient(PatientDTO patient) throws Exception {
+        return createPatient(patient, objectMapper, mockMvc);
+    }
+
+    public static PatientDTO createPatient(PatientDTO patient, ObjectMapper objectMapper, MockMvc mockMvc) throws Exception {
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/api/patient")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patient))).andReturn().getResponse();

@@ -3,6 +3,10 @@ package it.intesys.rookie.repository;
 import it.intesys.rookie.domain.BloodGroup;
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,9 +22,13 @@ import java.util.Optional;
 @Repository
 
 public class PatientRepository extends RookieRepository {
+    public static final int BATCH_SIZE = 100;
+    private DoctorRepository doctorRepository;
+    private final ApplicationContext applicationContext;
 
-    public PatientRepository(JdbcTemplate db) {
+    public PatientRepository(JdbcTemplate db, ApplicationContext applicationContext) {
         super(db);
+        this.applicationContext = applicationContext;
     }
     public Patient save(Patient patient) {
         if (patient.getId() == null) {
@@ -37,10 +45,27 @@ public class PatientRepository extends RookieRepository {
                             "bloodGroup = ?, opd = ?, idp = ? " +
                             "where id = ?", Timestamp.from(patient.getLastAdmission()), patient.getName(), patient.getSurname(),
                     patient.getEmail(), patient.getPhoneNumber(),patient.getAddress(), patient.getAvatar(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getBloodGroup().ordinal(), patient.getOpd(), patient.getIdp(), patient.getId());
-            if (updateCount != 1)
-                throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
-            return findPatientById(patient.getId());
+
         }
+        List<Doctor> doctors = patient.getDoctors();
+        List<Doctor> currentDoctors = findPatientById(patient.getId()).getDoctors();
+
+        List<Doctor> insertions = subtract(doctors, currentDoctors);
+        db.batchUpdate("insert into doctor_patient (patient_id, doctor_id) values (?, ?)", insertions, BATCH_SIZE, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+
+        List<Doctor> deletions = subtract (currentDoctors, doctors);
+        db.batchUpdate("delete from doctor_patient where patient_id = ? and doctor_id = ?", deletions, BATCH_SIZE, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+        if(patient.getId()==null){
+            return patient;
+        }
+
+        return findPatientById(patient.getId());
     }
 
     public Optional<Patient> findById(Long id) {
@@ -136,4 +161,9 @@ public class PatientRepository extends RookieRepository {
         List<Patient> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
         return new PageImpl<>(patients, pageable, 0);
     }
+    @EventListener(ApplicationReadyEvent.class)
+    synchronized void init(){
+        doctorRepository = applicationContext.getBean(DoctorRepository.class);
+    }
+
 }

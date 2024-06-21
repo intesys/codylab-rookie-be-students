@@ -3,16 +3,15 @@ package it.intesys.rookie.repository;
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.print.Doc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,13 +56,6 @@ public class DoctorRepository extends RookieRepository {
             return findDoctorById(doctor.getId());
         }
     }
-    protected <T> List<T> subtract(List<T> from, List<T> what) {
-        ArrayList<T> clone = new ArrayList<>(from);
-        clone.removeAll(what);
-        return clone;
-    }
-
-
 
     public Optional<Doctor> findById(Long id) {
         try {
@@ -127,6 +119,18 @@ public class DoctorRepository extends RookieRepository {
         }
         String query = pagingQuery(queryBuffer, pageable);
         List<Doctor> doctors = db.query(query, this::map, parameters.toArray());
+        return new PageImpl<>(doctors, pageable, 0);
+    }
+
+    public Page<Doctor> findLatestByPatients(Patient patient, int limit){
+        StringBuilder queryBuffer = new StringBuilder("select b.* from patientrecord a "+//attento
+                "join doctor b on b.id = a.doctor_id " +
+                "where a.patient_id = ?");
+        List<Object> parameters = List.of(patient.getId());
+
+        PageRequest pageable = PageRequest.of(0,limit,Sort.by(Sort.Order.desc("date")));//attento
+        String query = pagingQuery(queryBuffer, pageable);
+        List<Doctor> doctors = db.query(query, this::map, parameters.toArray(Object[]::new));
         return new PageImpl<>(doctors, pageable, 0);
     }
 }

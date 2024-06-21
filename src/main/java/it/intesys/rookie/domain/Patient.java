@@ -1,6 +1,7 @@
 package it.intesys.rookie.domain;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 public class Patient {
@@ -18,6 +19,7 @@ public class Patient {
     private BloodGroup bloodGroup;     //mancano patientrecords doctor id's
     private Long opd;
     private Long idp;
+    private List<Doctor> doctors;
 
 
     public String getAddress() {
@@ -154,4 +156,11 @@ public class Patient {
     }
 
 
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
+    }
 }

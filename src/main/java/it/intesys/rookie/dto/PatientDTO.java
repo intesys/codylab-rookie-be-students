@@ -1,6 +1,9 @@
 package it.intesys.rookie.dto;
 
+import it.intesys.rookie.domain.Doctor;
+
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 public class PatientDTO {
@@ -19,6 +22,7 @@ public class PatientDTO {
     private Long opd;
     private Long idp;
 
+    private List<Long> doctorIds;
 
     public Long getId() {
         return id;
@@ -154,5 +158,13 @@ public class PatientDTO {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public List<Long> getDoctorIds() {
+        return doctorIds;
+    }
+
+    public void setDoctorIds(List<Long> doctorIds) {
+        this.doctorIds = doctorIds;
     }
 }
