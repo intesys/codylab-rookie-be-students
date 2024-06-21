@@ -24,13 +24,29 @@ public class PatientRepository extends RookieRepository {
     }
 
     public Patient save(Patient patient) {
-        Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
-        patient.setId(id);
+        if(patient.getId() == null) {
+            Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
+            patient.setId(id);
 
-        db.update("insert into patient (id, name, surname, phone_number, ultima_visita, email) " +
-                        "values (?,?,?,?,?,?)", patient.getId(), patient.getName(), patient.getSurname(),
-                patient.getPhoneNumber(), Timestamp.from(patient.getUltimaVisita()), patient.getEmail());
+            db.update("insert into patient (id, name, surname, phone_number, ultima_visita, email," +
+                            " address, opd, idp, avatar, bloodGroup, notes, chronicPatient, lastDoctorVisitedId) " +
+                            "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", patient.getId(), patient.getName(), patient.getSurname(),
+                    patient.getPhoneNumber(), Timestamp.from(patient.getUltimaVisita()), patient.getEmail(), patient.getAddress(),
+                    patient.getOpd(), patient.getIdp(), patient.getAvatar(), patient.getBloodGroup(), patient.getNotes(),
+                    patient.getChronicPatient(), patient.getLastDoctorVisitedId());
 
+        }else {
+        int updateCount = db.update("update patient set address = ?, ultima_visita = ?, email = ?, name = ?, phone_number = ?, " +
+                        "surname = ?, where opd = ?, where idp = ?, where avatar = ?, where bloodGroup = ?, where notes = ?," +
+                        "where chronicPatient = ?, where lastDoctorVisitedId = ?,where id = ?",
+                patient.getAddress(), patient.getUltimaVisita(), patient.getEmail(),  patient.getName(), patient.getPhoneNumber(),
+                patient.getSurname(), patient.getOpd(), patient.getIdp(), patient.getAvatar(), patient.getBloodGroup(), patient.getNotes(),
+                patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getId());
+        if(updateCount != 1){
+            throw new IllegalStateException(String.format("update count %id, excepted 1", updateCount));
+        }
+        return findOriginalPatientById(patient.getId());
+     }
         return patient;
     }
 
@@ -57,6 +73,7 @@ public class PatientRepository extends RookieRepository {
         patient.setName(resultSet.getString("name"));
         patient.setSurname(resultSet.getString("surname"));
         patient.setEmail(resultSet.getString("email"));
+        patient.setAddress(resultSet.getString("address"));
         return patient;
     }
 

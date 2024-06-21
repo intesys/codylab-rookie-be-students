@@ -1,0 +1,1 @@
+alter TABLE public.patient add column address varchar(256);
