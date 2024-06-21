@@ -1,5 +1,6 @@
 package it.intesys.rookie.repository;
 
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -25,16 +26,22 @@ public class PatientRepository extends RookieRepository {
     }
 
     public Patient save(Patient patient) {
-        Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
-        patient.setId(id);
-
-        db.update("insert into patient (id, name, surname, phone_number, ultima_visita, email) " +
-                        "values (?,?,?,?,?,?)", patient.getId(), patient.getName(), patient.getSurname(),
-                patient.getPhone_number(), Timestamp.from(patient.getUltima_visita()), patient.getEmail());
-
-        return patient;
+        if (patient.getId() == null) {
+            Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
+            patient.setId(id);
+            db.update("Insert into patient (id, opd, idp, name, surname, phoneNumber, address, email, avatar, bloodGroup, notes, chronicPatient, LastAdmission, lastDoctorVisitedId)" +
+                            "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", patient.getId(), patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
+                    patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastAdmission(), patient.getLastDoctorVisitedId());
+            return patient;
+        } else {
+            int updateCount = db.update("update patient set opd = ?, idp = ?, name = ?, surname= ?, phoneNumber = ?, address = ?, email = ?, avatar = ?, bloodGroup = ?, notes = ?, chronicPatient = ?, lastDoctorVisitedId = ?, where id = ?", patient.getOpd(), patient.getIdp(), patient.getName(), patient.getSurname(), patient.getPhoneNumber(), patient.getAddress(), patient.getEmail(),
+                    patient.getAvatar(), patient.getBloodGroup().ordinal(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getId());
+            if (updateCount != 1) {
+                throw new IllegalStateException(String.format("Update count %d, excepted 1", updateCount));
+            }
+            return getPatient(patient.getId());
+        }
     }
-
 
 
     public Optional<Patient> findById(Long id) {

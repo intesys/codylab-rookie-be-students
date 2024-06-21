@@ -28,15 +28,14 @@ public class PatientApi {
         this.patientservice = patientservice;
     }
 
-    @PostMapping("/api/patient")
+    @PostMapping(API_PATIENT)
     public PatientDTO createPatient (@RequestBody PatientDTO patient){
         return patientservice.createPatient (patient);
     }
 
 
-// codice 13/06/2024,
 
-    @GetMapping("/api/patient/{id}")
+    @GetMapping(API_PATIENT_ID)
     ResponseEntity<PatientDTO> getPatient (@PathVariable Long id) {
         try{
             PatientDTO account = patientservice.getPatient(id);
