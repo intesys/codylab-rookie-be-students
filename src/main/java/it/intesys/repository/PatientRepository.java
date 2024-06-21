@@ -5,7 +5,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +29,7 @@ public class PatientRepository extends RookieRepository {
 
         db.update("insert into patient (id, name, surname, phone_number, ultima_visita, email) " +
                         "values (?,?,?,?,?,?)", patient.getId(), patient.getName(), patient.getSurname(),
-                patient.getPhone_number(), Timestamp.from(patient.getUltima_visita()), patient.getEmail());
+                patient.getPhoneNumber(), Timestamp.from(patient.getUltimaVisita()), patient.getEmail());
 
         return patient;
     }
@@ -53,8 +52,8 @@ public class PatientRepository extends RookieRepository {
     private Patient map(ResultSet resultSet, int i) throws SQLException {
         Patient patient = new Patient();
         patient.setId(resultSet.getLong("id"));
-        patient.setUltima_visita(resultSet.getTimestamp("ultima_visita").toInstant());
-        patient.setPhone_number(resultSet.getInt("phone_number"));
+        patient.setUltimaVisita(resultSet.getTimestamp("ultima_visita").toInstant());
+        patient.setPhoneNumber(resultSet.getLong("phone_number"));
         patient.setName(resultSet.getString("name"));
         patient.setSurname(resultSet.getString("surname"));
         patient.setEmail(resultSet.getString("email"));
@@ -70,13 +69,13 @@ public class PatientRepository extends RookieRepository {
     }
 
     public Page<Patient> findAll(String filter, Pageable pageable){
-        StringBuilder queryBuffer = new StringBuilder("select * from patient");
+        StringBuilder queryBuffer = new StringBuilder("select * from patient ");
 
         List<Object> parameters = new ArrayList<>();
         if(filter != null && !filter.isBlank()){
             queryBuffer.append("where name like ? or surname like ? or email like ?");
             String like = "%" + filter + "%";
-            for(int i= 0; i< 4; i++){
+            for(int i= 0; i < 3; i++){
                 parameters.add(like);
             }
         }

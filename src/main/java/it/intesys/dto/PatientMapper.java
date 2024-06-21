@@ -8,8 +8,8 @@ public class PatientMapper {
     public Patient toEntity(PatientDTO patientDTO) {
         Patient patient = new Patient();
         patient.setId(patientDTO.getId());
-        patient.setUltima_visita(patientDTO.getUltima_visita());
-        patient.setPhone_number(patientDTO.getPhone_number());
+        patient.setUltimaVisita(patientDTO.getLastAdmission());
+        patient.setPhoneNumber(patientDTO.getPhoneNumber());
         patient.setName(patientDTO.getName());
         patient.setSurname(patientDTO.getSurname());
         patient.setEmail(patientDTO.getEmail());
@@ -19,8 +19,8 @@ public class PatientMapper {
     public PatientDTO toDataTrasferObject(Patient patient) {
         PatientDTO patientDTO = new PatientDTO();
         patientDTO.setId(patient.getId());
-        patientDTO.setUltima_visita(patient.getUltima_visita());
-        patientDTO.setPhone_number(patient.getPhone_number());
+        patientDTO.setLastAdmission(patient.getUltimaVisita());
+        patientDTO.setPhoneNumber(patient.getPhoneNumber());
         patientDTO.setName(patient.getName());
         patientDTO.setSurname(patient.getSurname());
         patientDTO.setEmail(patient.getEmail());

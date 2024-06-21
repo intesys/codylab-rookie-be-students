@@ -17,6 +17,7 @@ public class HospitalExceptionHandler {
 
     @ExceptionHandler (Mandatory.class)
     public ResponseEntity<String> handleBadRequest (RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

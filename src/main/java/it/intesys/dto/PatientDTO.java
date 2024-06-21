@@ -4,11 +4,11 @@ import java.time.Instant;
 
 public class PatientDTO {
     private Long id;
-    private Instant ultima_visita;
+    private Instant lastAdmission;
     private String name;
     private String surname;
     private String email;
-    private int phone_number;
+    private Long phoneNumber;
 
     public Long getId() {
         return id;
@@ -18,12 +18,12 @@ public class PatientDTO {
         this.id = id;
     }
 
-    public Instant getUltima_visita() {
-        return ultima_visita;
+    public Instant getLastAdmission() {
+        return lastAdmission;
     }
 
-    public void setUltima_visita(Instant ultima_visita) {
-        this.ultima_visita = ultima_visita;
+    public void setLastAdmission(Instant lastAdmission) {
+        this.lastAdmission = lastAdmission;
     }
 
     public String getName() {
@@ -50,11 +50,11 @@ public class PatientDTO {
         this.email = email;
     }
 
-    public int getPhone_number() {
-        return phone_number;
+    public Long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(int phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

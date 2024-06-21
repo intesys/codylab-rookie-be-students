@@ -26,7 +26,7 @@ public class PatientService {
         Patient patient = patientMapper.toEntity (patientDTO);
 
         Instant now = Instant.now();
-        patient.setUltima_visita(Instant.now());
+        patient.setUltimaVisita(Instant.now());
 
         patient = patientRepository.save (patient);
         patientDTO = patientMapper.toDataTrasferObject (patient);
@@ -51,7 +51,7 @@ public class PatientService {
         Patient patient = patientMapper.toEntity(patientDTO);
 
         Instant now = Instant.now();
-        patient.setUltima_visita(now);
+        patient.setUltimaVisita(now);
 
         patient = patientRepository.save (patient);
         patientDTO = patientMapper.toDataTrasferObject(patient);
