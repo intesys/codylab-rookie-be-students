@@ -1,10 +1,19 @@
 package it.intesys.openhospital.dto;
 
 import it.intesys.openhospital.domain.Doctor;
+import it.intesys.openhospital.repository.PatientRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DoctorMapper {
+    private PatientRepository patientRepository;
+    private PatientMapper patientMapper;
+
+    public DoctorMapper(PatientRepository patientRepository, PatientMapper patientMapper) {
+        this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
+    }
+
     public Doctor toEntity(DoctorDTO doctorDTO){
         Doctor doctor = new Doctor();
         doctor.setId(doctorDTO.getId());
@@ -28,6 +37,7 @@ public class DoctorMapper {
         doctorDTO.setEmail(doctor.getEmail());
         doctorDTO.setAvatar(doctor.getAvatar());
         doctorDTO.setProfession(doctor.getProfession());
+        doctorDTO.setLatestPatients(patientRepository.findLatestByDoctor(doctor, 5).stream().map(patientMapper::toDataTransferObject).toList());
         return doctorDTO;
     }
 }

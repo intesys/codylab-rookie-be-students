@@ -2,7 +2,7 @@ package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.intesys.codylab.rookie.App;
+import it.intesys.openhospital.App;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;

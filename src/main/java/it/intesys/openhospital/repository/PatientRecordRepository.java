@@ -2,20 +2,28 @@ package it.intesys.openhospital.repository;
 
 import it.intesys.openhospital.domain.Patient;
 import it.intesys.openhospital.domain.PatientRecord;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class PatientRecordRepository extends CommonRepository {
+    private final PatientRepository patientRepository;
 
-    public PatientRecordRepository(JdbcTemplate db) {
+    public PatientRecordRepository(JdbcTemplate db, PatientRepository patientRepository) {
         super(db);
+        this.patientRepository = patientRepository;
     }
+
 
     public PatientRecord save(PatientRecord patientRecord) {
         if (patientRecord.getId() == null) {
@@ -54,7 +62,7 @@ public class PatientRecordRepository extends CommonRepository {
         return db.queryForObject("select * from patient_record where id = ?", this::map, id);
     }
 
-    private PatientRecord map(ResultSet resultSet, int i) throws SQLException {
+    private PatientRecord   map(ResultSet resultSet, int i) throws SQLException {
         PatientRecord patientRecord = new PatientRecord();
         patientRecord.setId(resultSet.getLong("id"));
         patientRecord.setPatientId(resultSet.getLong("patientid"));
@@ -64,6 +72,19 @@ public class PatientRecordRepository extends CommonRepository {
         patientRecord.setReasonVisit(resultSet.getString("reasonvisit"));
         patientRecord.setTreatmentMade(resultSet.getString("treatmentmade"));
         return patientRecord;
+    }
+    public Page<PatientRecord> findLatestByPatient(Patient patient, int size) {
+        StringBuilder queryBuffer = new StringBuilder("select patient_record.* from patient_record" +
+                " join patient on patient.id = patient_record.patientid" +
+                " where patient_record.patientid = ?");
+
+        List<Object> parameters = List.of(patient.getId());
+
+        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        String query = pagingQuery(queryBuffer, pageable);
+
+        List<PatientRecord> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
+        return new PageImpl<>(patients, pageable, 0);
     }
 
     public void delete(Long id) {

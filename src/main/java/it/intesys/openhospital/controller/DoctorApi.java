@@ -33,7 +33,7 @@ public class DoctorApi extends CommonApi{
         return ResponseEntity.ok(doctor);
     }
     @PutMapping(API_DOCTOR_ID)
-    public void updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
+    void updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){
         doctorService.updateDoctor(id, doctorDTO);
         // return doctorService.updateDoctor(id, doctorDTO);
     }

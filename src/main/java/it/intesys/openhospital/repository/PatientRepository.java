@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 import it.intesys.openhospital.domain.BloodGroup;
+import it.intesys.openhospital.domain.Doctor;
 import it.intesys.openhospital.domain.Patient;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -51,7 +50,7 @@ public class PatientRepository extends CommonRepository {
         }
     }
 
-    private Patient getPatient(Long id) {
+    protected Patient getPatient(Long id) {
         Patient patient = db.queryForObject("select * from patient where id = ?", this::map, id);
         return patient;
     }
@@ -79,9 +78,16 @@ public class PatientRepository extends CommonRepository {
     }
 
     public Page<Patient> findAll(String text, Long id, Long opd, Long idp, Long doctorId, Pageable pageable) {
-        StringBuilder queryBuffer = new StringBuilder("select * from patient ");
+        StringBuilder queryBuffer = new StringBuilder("select * from patient a ");
         List<Object> parameters = new ArrayList<>();
         String whereAndOr = "where ";
+        if (doctorId != null){
+            queryBuffer.append("join doctor_patient b on b.patientid = a.id ") .append(whereAndOr);
+            whereAndOr = "and ";
+            queryBuffer.append("b.doctorid = ? ");
+            parameters.add(doctorId);
+        }
+
         if (text != null){
             queryBuffer.append(whereAndOr);
             whereAndOr = "and ";
@@ -110,12 +116,6 @@ public class PatientRepository extends CommonRepository {
             parameters.add(idp);
         }
 
-//        if (doctorId != null){
-//            queryBuffer.append(whereAndOr);
-//            queryBuffer.append("doctorId = ? ");
-//            parameters.add(doctorId);
-//        }
-
         String query = pagingQuery(queryBuffer, pageable);
         List<Patient> patients = db.query(query, this::map, parameters.toArray());
         return new PageImpl<>(patients, pageable, 0);
@@ -124,6 +124,20 @@ public class PatientRepository extends CommonRepository {
         return db.query("select patient.* from doctor_patient " +
                 "join patient on doctor_patient.patient_id = patient.id " +
                 "where doctor_patient.doctor_id = ?", this::map, doctorId);
+    }
+
+    public Page<Patient> findLatestByDoctor(Doctor doctor, int size){
+        StringBuilder queryBuffer = new StringBuilder("select patient.* from patient_record" +
+                " join patient on patient.id = patient_record.patientid" +
+                " where patient_record.doctorid = ?");
+
+        List<Object> parameters = List.of(doctor.getId());
+
+        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        String query = pagingQuery(queryBuffer, pageable);
+
+        List<Patient> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
+        return new PageImpl<>(patients, pageable, 0);
     }
 
     public void delete(Long id) {

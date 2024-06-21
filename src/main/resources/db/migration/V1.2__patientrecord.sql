@@ -8,8 +8,8 @@ CREATE SEQUENCE public.patient_record_sequence
 
 CREATE TABLE public.patient_record (
 	id int8 NOT NULL,
-	patientId int8 NULL,
-	doctorId varchar(128) NULL,
+	patientId int8 NOT NULL REFERENCES patient(id),
+	doctorId int8 NOT NULL REFERENCES doctor(id),
 	date timestamp NULL,
 	typeVisit varchar(128) NULL,
 	reasonVisit varchar(128) NULL,

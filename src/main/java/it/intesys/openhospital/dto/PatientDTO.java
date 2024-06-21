@@ -1,6 +1,8 @@
 package it.intesys.openhospital.dto;
 
 import it.intesys.openhospital.domain.BloodGroup;
+import it.intesys.openhospital.domain.PatientRecord;
+
 import java.util.List;
 
 import java.time.Instant;
@@ -21,6 +23,7 @@ public class PatientDTO {
     private Instant LastAdmission;
     private Long lastDoctorVisitedId;
     private List<PatientRecordDTO> patientRecords;
+    private Long[] doctorIds;
     public Long getId() {
         return id;
     }
@@ -139,5 +142,13 @@ public class PatientDTO {
 
     public void setPatientRecords(List<PatientRecordDTO> patientRecords) {
         this.patientRecords = patientRecords;
+    }
+
+    public Long[] getDoctorIds() {
+        return doctorIds;
+    }
+
+    public void setDoctorIds(Long[] doctorIds) {
+        this.doctorIds = doctorIds;
     }
 }

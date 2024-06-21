@@ -13,7 +13,7 @@ public class DoctorDTO {
         private String profession;
         private List<PatientDTO> latestPatients;
 
-        public Long getId() {
+    public Long getId() {
             return id;
         }
 
@@ -84,4 +84,5 @@ public class DoctorDTO {
     public void setLatestPatients(List<PatientDTO> latestPatients) {
         this.latestPatients = latestPatients;
     }
+
 }

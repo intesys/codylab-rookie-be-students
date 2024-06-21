@@ -125,4 +125,5 @@ public class DoctorRepository extends CommonRepository {
             throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
         }
     }
+
 }

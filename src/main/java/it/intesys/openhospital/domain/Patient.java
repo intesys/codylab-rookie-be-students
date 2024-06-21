@@ -20,6 +20,7 @@ public class Patient {
     private Instant LastAdmission;
     private Long lastDoctorVisitedId;
     private List<PatientRecord> patientRecords;
+    private Long[] doctorIds;
 
     public Long getId() {
         return id;
@@ -141,6 +142,14 @@ public class Patient {
         this.patientRecords = patientRecords;
     }
 
+    public Long[] getDoctorIds() {
+        return doctorIds;
+    }
+
+    public void setDoctorIds(Long[] doctorIds) {
+        this.doctorIds = doctorIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -152,5 +161,26 @@ public class Patient {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id=" + id +
+                ", opd=" + opd +
+                ", idp=" + idp +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", address='" + address + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", bloodGroup=" + bloodGroup +
+                ", notes='" + notes + '\'' +
+                ", chronicPatient=" + chronicPatient +
+                ", LastAdmission=" + LastAdmission +
+                ", lastDoctorVisitedId=" + lastDoctorVisitedId +
+                ", patientRecords=" + patientRecords +
+                '}';
     }
 }
