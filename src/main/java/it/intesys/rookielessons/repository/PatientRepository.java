@@ -1,7 +1,6 @@
 package it.intesys.rookielessons.repository;
 
 import it.intesys.rookielessons.domain.Patient;
-import it.intesys.rookielessons.domain.Status;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +25,7 @@ public class PatientRepository extends HospitalRepository {
         if(patient.getId() == null){
             Long id = db.queryForObject("select nextval('patient_sequence') ", Long.class);
             patient.setId(id);
-            db.update("insert into patient (id, last_admission, phone_number, name, surname, email, status) " +
+            db.update("insert into patient (id, last_admission, phone_number, name, surname, email) " +
                             "values (?, ?, ?, ?, ?, ?)", patient.getId(), Timestamp.from(patient.getLastAdmission()), patient.getPhoneNumber(),
                     patient.getName(), patient.getSurname(), patient.getEmail());
             return patient;

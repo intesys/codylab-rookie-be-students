@@ -1,7 +1,6 @@
 package it.intesys.rookielessons.service;
 
 import it.intesys.rookielessons.domain.Patient;
-import it.intesys.rookielessons.domain.Status;
 import it.intesys.rookielessons.dto.PatientDTO;
 import it.intesys.rookielessons.dto.PatientMapper;
 import it.intesys.rookielessons.repository.PatientRepository;
@@ -26,9 +25,8 @@ public class PatientService {
         Patient patient = patientMapper.toEntity(patientDTO);
 
         Instant now = Instant.now();
-        patient.setFirstAdmission(now);
         patient.setLastAdmission(now);
-        patient.setStatus(Status.REGISTERED);
+
 
         verify (patient);
 
@@ -52,7 +50,6 @@ public class PatientService {
 
         patientDTO.setId(id);
         Patient patient = patientMapper.toEntity(patientDTO);
-        patient.setStatus(existing.get().getStatus());
 
         Instant now = Instant.now();
         patient.setLastAdmission(now);
@@ -64,8 +61,6 @@ public class PatientService {
     }
 
     private void verify(Patient patient) {
-        if (patient.getStatus() == null)
-            throw new Mandatory(Patient.class, patient.getId(), "status");
         if (patient.getPhoneNumber() == null)
             throw new Mandatory(Patient.class, patient.getId(), "phoneNumber");
         if (patient.getName() == null)
