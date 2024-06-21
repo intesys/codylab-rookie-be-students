@@ -1,13 +1,21 @@
 package it.intesys.rookie.dto;
 
 import it.intesys.rookie.domain.BloodGroup;
+import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+import it.intesys.rookie.repository.DoctorRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
 public class PatientMapper {
+    private final DoctorRepository doctorRepository;
+
+    public PatientMapper(DoctorRepository doctorRepository) {
+        this.doctorRepository = doctorRepository;
+    }
+
     public Patient toEntity(PatientDTO patientDTO) {
         Patient patient = new Patient();
         patient.setId(patientDTO.getId());
@@ -26,6 +34,7 @@ public class PatientMapper {
         patient.setBloodGroup(Optional.ofNullable(patientDTO.getBloodGroup())
                 .map(s -> BloodGroup.valueOf(s.name()))
                 .orElse(null));
+        patient.setDoctors(patientDTO.getDoctorIds().stream().map(doctorRepository::findById).map(Optional::get).toList());
         return patient;
     }
 
@@ -45,6 +54,7 @@ public class PatientMapper {
         patientDTO.setBloodGroup(BloodGroupDTO.valueOf(patient.getBloodGroup().name()));
         patientDTO.setOpd(patient.getOpd());
         patientDTO.setIdp(patient.getIdp());
+        patientDTO.setDoctorIds(doctorRepository.findByPatient(patient).stream().map(Doctor::getId).toList());
         return patientDTO;
 
     }

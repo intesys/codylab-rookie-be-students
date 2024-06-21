@@ -3,6 +3,9 @@ package it.intesys.rookie.repository;
 import it.intesys.rookie.domain.BloodGroup;
 import it.intesys.rookie.domain.Doctor;
 import it.intesys.rookie.domain.Patient;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,21 +20,23 @@ import java.util.Optional;
 
 @Repository
 
-public class PatientRepository {
-    private final JdbcTemplate db;
+public class PatientRepository extends RookieRepository{
+    private final ApplicationContext applicationContext;
+    private DoctorRepository doctorRepository;
 
-    public PatientRepository(JdbcTemplate db) {
-        this.db = db;
+    public PatientRepository(JdbcTemplate db, ApplicationContext applicationContext) {
+        super(db);
+        this.applicationContext = applicationContext;
     }
     public Patient save(Patient patient) {
-        if (patient.getId() == null) {
+        boolean insertion = patient.getId() == null;
+        if (insertion) {
             Long id = db.queryForObject("select nextval('patient_sequence')", Long.class);
             patient.setId(id);
              db.update("insert into patient (id, name, surname, email, phoneNumber, lastAdmission, address, avatar, notes, chronicPatient, lastDoctorVisitedId, bloodGroup, opd, idp) " +
                             "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", patient.getId(), patient.getName(), patient.getSurname(), patient.getEmail(),
                     patient.getPhoneNumber(), Timestamp.from(patient.getLastAdmission()), patient.getAddress(), patient.getAvatar(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getBloodGroup().ordinal(), patient.getOpd(), patient.getIdp());
 
-             return patient;
         } else {
             int updateCount = db.update("update patient set lastAdmission = ?, name = ?, surname = ?, email = ?, " +
                             "phoneNumber = ?, address = ?, avatar = ?, notes = ?, chronicPatient = ?, lastDoctorVisitedId = ?, " +
@@ -40,6 +45,26 @@ public class PatientRepository {
                     patient.getEmail(), patient.getPhoneNumber(),patient.getAddress(), patient.getAvatar(), patient.getNotes(), patient.getChronicPatient(), patient.getLastDoctorVisitedId(), patient.getBloodGroup().ordinal(), patient.getOpd(), patient.getIdp(), patient.getId());
             if (updateCount != 1)
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
+         }
+
+        List<Doctor> doctors = patient.getDoctors();
+        List<Doctor> currentDoctors = insertion ? List.of(): doctorRepository.findByPatient(patient);
+        List<Doctor> insertions = subtract(doctors, currentDoctors);
+        List<Doctor> deletions = subtract (currentDoctors, doctors);
+
+        db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+
+        db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, BATCH_SIZE, (ps, doctor) -> {
+            ps.setLong(1, doctor.getId());
+            ps.setLong(2, patient.getId());
+        });
+
+        if (insertion) {
+            return patient;
+        } else {
             return findPatientById(patient.getId());
         }
     }
@@ -86,12 +111,12 @@ public class PatientRepository {
             throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));
     }
 
-    public Page<Patient> findAll(String filter, Pageable pageable) {
+    public Page<Patient> findAll(String text, Long doctorId, Long idp, Long opd, Long id, Pageable pageable) {
         StringBuilder queryBuffer = new StringBuilder("select * from patient ");
         List<Object> parameters = new ArrayList<>();
-        if(filter != null && !filter.isBlank()){
+        if(text != null && !text.isBlank()){
             queryBuffer.append("where name like ? or surname like ? or email like ?");
-            String like = "%" + filter + "%";
+            String like = "%" + text + "%";
             for (int i =0; i<3; i++) parameters.add(like);
         }
         String query = pagingQuery(queryBuffer, pageable);
@@ -136,5 +161,9 @@ public class PatientRepository {
         String query = pagingQuery(queryBuffer, pageable);
         List<Patient> patients = db.query(query, this::map, parameters.toArray(Object[]::new));
         return new PageImpl<>(patients, pageable, 0);
+    }
+    @EventListener(ApplicationReadyEvent.class)
+    void init () {
+        doctorRepository = applicationContext.getBean(DoctorRepository.class);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.print.Doc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,20 +41,6 @@ public class DoctorRepository {
         }else{
             int updateCount = db.update ("update doctor set name = ?, surname = ?, email = ?, phoneNumber = ?, profession = ?, avatar = ?, address = ? where id = ?",
                     doctor.getName(), doctor.getSurname(), doctor.getEmail(), doctor.getPhoneNumber(), doctor.getProfession(), doctor.getAvatar(), doctor.getAddress(), doctor.getId());
-            List<Patient> patients = doctor.getPatients();
-            List<Patient> currentPatients = findDoctorById(doctor.getId()).getPatients();
-
-            List<Patient> insertions = subtract(currentPatients, patients);
-            db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, patient) -> {
-                ps.setLong(1, doctor.getId());
-                ps.setLong(2, patient.getId());
-            });
-
-            List<Patient> deletions = subtract (currentPatients, patients);
-            db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, BATCH_SIZE, (ps, patient) -> {
-                ps.setLong(1, doctor.getId());
-                ps.setLong(2, patient.getId());
-            });
 
             return findDoctorById(doctor.getId());
         }
@@ -82,6 +69,10 @@ public class DoctorRepository {
             doctor.setPatients(patients);
         }
         return doctor;
+    }
+
+    public List<Doctor> findByPatient (Patient patient) {
+        return db.query("select a.* from doctor a join doctor_patient b on b.doctor_id = a.id where b.patient_id = ?", this::map, patient.getId());
     }
     public void delete(Long id) {
         int updateCount = db.update("delete from doctor where id = ?", id);

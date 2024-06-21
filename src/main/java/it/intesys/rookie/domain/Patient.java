@@ -1,6 +1,8 @@
 package it.intesys.rookie.domain;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Patient {
@@ -18,6 +20,7 @@ public class Patient {
     private BloodGroup bloodGroup;     //mancano patientrecords doctor id's
     private Long opd;
     private Long idp;
+    private List<Doctor> doctors;
 
 
     public String getAddress() {
@@ -133,6 +136,21 @@ public class Patient {
     public void setLastAdmission(Instant lastAdmission) {
         this.lastAdmission = lastAdmission;
     }
+
+    public boolean isChronicPatient() {
+        return chronicPatient;
+    }
+
+    public List<Doctor> getDoctors() {
+        if (doctors == null)
+            doctors = new ArrayList<>();
+        return doctors;
+    }
+
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
+    }
+
     public String toString() {
         return "PatientDTO{" +
                 "id=" + id +

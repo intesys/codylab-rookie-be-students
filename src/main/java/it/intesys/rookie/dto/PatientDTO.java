@@ -1,6 +1,8 @@
 package it.intesys.rookie.dto;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PatientDTO {
@@ -18,6 +20,7 @@ public class PatientDTO {
     private BloodGroupDTO bloodGroup;
     private Long opd;
     private Long idp;
+    private List<Long> doctorIds;
 
 
     public Long getId() {
@@ -130,6 +133,16 @@ public class PatientDTO {
 
     public void setIdp(Long idp) {
         this.idp = idp;
+    }
+
+    public List<Long> getDoctorIds() {
+        if (doctorIds == null)
+            doctorIds = new ArrayList<>();
+        return doctorIds;
+    }
+
+    public void setDoctorIds(List<Long> doctorIds) {
+        this.doctorIds = doctorIds;
     }
 
     public String toString() {
