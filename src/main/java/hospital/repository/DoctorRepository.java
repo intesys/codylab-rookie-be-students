@@ -29,11 +29,14 @@ public class DoctorRepository extends CommonRepository {
             Long id = db.queryForObject("select nextval('doctor_sequence')", Long.class);
             doctor.setId(id);
             db.update("Insert into doctor (id, name, surname, phonenumber, address, email, avatar, profession)" +
-                            "values(?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(),
+                            "values(?, ?, ?, ?, ?, ?, ?, ?)", doctor.getId(), doctor.getName(), doctor.getSurname(),
+                    doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(),
                     doctor.getAvatar(), doctor.getProfession());
             return doctor;
         } else {
-            int updateCount = db.update("update doctor set name = ?, surname = ?, phonenumber = ?, address = ?, email = ?, avatar = ?, profession = ? where id = ?", doctor.getName(), doctor.getSurname(), doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(),
+            int updateCount = db.update("update doctor set name = ?, surname = ?, phonenumber = ?, address = ?, " +
+                            "email = ?, avatar = ?, profession = ? where id = ?", doctor.getName(), doctor.getSurname(),
+                    doctor.getPhoneNumber(), doctor.getAddress(), doctor.getEmail(),
                     doctor.getAvatar(), doctor.getProfession(), doctor.getId());
             if (updateCount != 1){
                 throw new IllegalStateException(String.format("Update count %d, expected 1", updateCount));

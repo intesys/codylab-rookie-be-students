@@ -1,7 +1,9 @@
 package hospital.dto;
 
 import hospital.domain.PatientRecord;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PatientRecordMapper {
     public PatientRecord toEntity(PatientRecordDTO patientRecordDTO){
         PatientRecord patientRecord = new PatientRecord();

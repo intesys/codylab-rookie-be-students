@@ -5,9 +5,10 @@ public class DoctorDTO {
     private String avatar;
     private String name;
     private String surname;
-    private Long phone;
+    private Long phoneNumber;
     private String email;
-    private String role;
+    private String profession;
+    private String address;
 
     public String getAvatar() {
         return avatar;
@@ -41,12 +42,12 @@ public class DoctorDTO {
         this.surname = surname;
     }
 
-    public Long getPhone() {
-        return phone;
+    public Long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(Long phone) {
-        this.phone = phone;
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
@@ -57,12 +58,20 @@ public class DoctorDTO {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getProfession() {
+        return profession;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override
@@ -72,12 +81,10 @@ public class DoctorDTO {
                 ", avatar='" + avatar + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", phone=" + phone +
+                ", phone=" + phoneNumber +
                 ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
+                ", role='" + profession + '\'' +
                 '}';
     }
 
-    public void setProfession(String profession) {
-    }
 }

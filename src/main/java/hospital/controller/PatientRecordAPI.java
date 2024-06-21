@@ -5,6 +5,7 @@ import hospital.service.PatientRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class PatientRecordAPI {
     public static final String API_PATIENT_RECORD = "/api/patientRecord";
     public static final String API_PATIENT_RECORD_ID = API_PATIENT_RECORD + "/{id}";

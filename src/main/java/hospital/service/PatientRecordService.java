@@ -6,10 +6,11 @@ import hospital.domain.PatientRecord;
 import hospital.dto.PatientRecordDTO;
 import hospital.dto.PatientRecordMapper;
 import hospital.repository.PatientRecordRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
-
+@Service
 public class PatientRecordService {
     PatientRecordMapper patientRecordMapper;
     PatientRecordRepository patientRecordRepository;

@@ -7,7 +7,7 @@ public class Doctor {
     private String name;
     private String surname;
     private Long phoneNumber;
-    private String Address;
+    private String address;
     private String email;
     private String avatar;
     private String profession;
@@ -22,11 +22,11 @@ public class Doctor {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public List getLatestPatients() {

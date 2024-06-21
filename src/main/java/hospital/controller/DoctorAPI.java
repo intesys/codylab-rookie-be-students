@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 public class DoctorAPI extends CommonAPI {
     private final DoctorService doctorService;
     public static final String API_DOCTOR = "/api/doctor";
