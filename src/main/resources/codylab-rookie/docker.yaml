@@ -7,9 +7,9 @@ services:
     image: ygmarchi/codylab-rookie:1.0-SNAPSHOT
     # http://localhost:8090/swagger-ui/index.html
     ports:
-      - 8090:8080
+      - 8090:8081
     environment:
-      POSTGRES_HOST: postgres
+      POSTGRES_HOSTNAME: postgres
 
 
   postgres:
