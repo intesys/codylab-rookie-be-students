@@ -147,4 +147,3 @@ public class PatientRepository extends CommonRepository {
         }
     }
 }
-

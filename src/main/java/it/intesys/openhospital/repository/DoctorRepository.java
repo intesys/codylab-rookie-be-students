@@ -3,9 +3,7 @@ package it.intesys.openhospital.repository;
 import it.intesys.openhospital.domain.Doctor;
 import it.intesys.openhospital.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -115,6 +113,19 @@ public class DoctorRepository extends CommonRepository {
         }
         String query = pagingQuery(queryBuffer, pageable);
         List<Doctor> doctors = db.query(query, this::map, parameters.toArray());
+        return new PageImpl<>(doctors, pageable, 0);
+    }
+    public Page<Doctor> findLatestByPatient(Patient patient, int size){
+        StringBuilder queryBuffer = new StringBuilder("select doctor.* from patient_record" +
+                " join doctor on doctor.id = patient_record.doctorid" +
+                " where patient_record.patientid = ?");
+
+        List<Object> parameters = List.of(patient.getId());
+
+        PageRequest pageable = PageRequest.of(0, size, Sort.by(Sort.Order.desc("date")));
+        String query = pagingQuery(queryBuffer, pageable);
+
+        List<Doctor> doctors = db.query(query, this::map, parameters.toArray(Object[]::new));
         return new PageImpl<>(doctors, pageable, 0);
     }
 

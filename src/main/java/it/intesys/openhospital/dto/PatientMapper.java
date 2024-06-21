@@ -1,20 +1,20 @@
 package it.intesys.openhospital.dto;
 
 import it.intesys.openhospital.domain.Patient;
-import it.intesys.openhospital.domain.PatientRecord;
 import it.intesys.openhospital.repository.PatientRecordRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 public class PatientMapper {
     private final PatientRecordRepository patientRecordRepository;
     private final PatientRecordMapper patientRecordMapper;
+    private final DoctorMapper doctorMapper;
 
-    public PatientMapper(PatientRecordRepository patientRecordRepository, PatientRecordMapper patientRecordMapper) {
+    public PatientMapper(PatientRecordRepository patientRecordRepository, PatientRecordMapper patientRecordMapper, DoctorMapper doctorMapper) {
         this.patientRecordRepository = patientRecordRepository;
         this.patientRecordMapper = patientRecordMapper;
+        this.doctorMapper = doctorMapper;
     }
 
     public Patient toEntity(PatientDTO patientDTO){
