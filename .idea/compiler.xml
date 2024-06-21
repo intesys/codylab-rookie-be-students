@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="hospital" />
+        <module name="codylab-rookie" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hospital" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

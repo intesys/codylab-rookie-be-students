@@ -17,6 +17,7 @@ public class Patient {
     private String avatar;
 
     public Object getChronicPatient() {
+        return null;
     }
 
     private enum bloodGroup{
@@ -49,7 +50,7 @@ public class Patient {
         this.address = address;
     }
 
-    public Long getIdp(Long idp) {
+    public Long getIdp() {
         return this.idp;
     }
 

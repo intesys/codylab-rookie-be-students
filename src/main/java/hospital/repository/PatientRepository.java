@@ -2,22 +2,19 @@ package hospital.repository;
 
 import hospital.domain.Patient;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.sql.Timestamp;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class PatientRepository {
-    private final JdbcTemplate db;
-
+public class PatientRepository extends CommonRepository{
     public PatientRepository(JdbcTemplate db) {
-        this.db = db;
+        super(db);
     }
 
     public Patient save(Patient patient) {
@@ -40,6 +37,22 @@ public class PatientRepository {
                 patient.getName(),
                 patient.getSurname(),
                 patient.getEmail());
+
+//        List<Patient> patients = doctor.getPatients();
+//        List<Patient> currentPatients = getDoctor(doctor.getId()).getPatients();
+//
+//
+//        List<Patient> insertions = subtract(patients, currentPatients);
+//        db.batchUpdate("insert into doctor_patient (doctor_id, patient_id) values (?, ?)", insertions, BATCH_SIZE, (ps, patient) -> {
+//            ps.setLong(1, doctor.getId());
+//            ps.setLong(2, patient.getId());
+//        });
+//
+//        List<Patient> deletions = subtract(currentPatients, patients);
+//        db.batchUpdate("delete from doctor_patient where doctor_id = ? and patient_id = ?", deletions, BATCH_SIZE, (ps, account) -> {
+//            ps.setLong(1, doctor.getId());
+//            ps.setLong(2, account.getId());
+//        });
         return patient;
     }
 
@@ -57,7 +70,7 @@ public class PatientRepository {
         Patient patient = new Patient();
         patient.setId(resultSet.getLong("id"));
         patient.setAddress(resultSet.getString("address"));
-        patient.getIdp(resultSet.getLong("idp"));
+        patient.setIdp(resultSet.getLong("idp"));
         patient.setOpd(resultSet.getLong("odp"));
         patient.setPhoneNumber(resultSet.getLong("phone_number"));
         patient.setNotes(resultSet.getString("notes"));
@@ -72,5 +85,12 @@ public class PatientRepository {
         patient.setEmail(resultSet.getString("email"));
         return patient;
 
+    }
+
+    public void delete(Long id) {
+    }
+
+    public Page<Patient> findAll(String filter, Long id, Long opd, Long idp, Long doctorId, Pageable pageable) {
+        return null;
     }
 }

@@ -1,12 +1,17 @@
 package hospital.domain;
 
+import java.util.List;
+
 public class Doctor {
     private Long id;
     private String name;
     private String surname;
-    private Long phone;
+    private Long phoneNumber;
+    private String Address;
     private String email;
-    private String role;
+    private String avatar;
+    private String profession;
+    private List latestPatients;
 
     public Long getId() {
         return id;
@@ -14,6 +19,22 @@ public class Doctor {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public List getLatestPatients() {
+        return latestPatients;
+    }
+
+    public void setLatestPatients(List latestPatients) {
+        this.latestPatients = latestPatients;
     }
 
     public String getName() {
@@ -32,12 +53,12 @@ public class Doctor {
         this.surname = surname;
     }
 
-    public Long getPhone() {
-        return phone;
+    public Long getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(Long phone) {
-        this.phone = phone;
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
@@ -48,12 +69,20 @@ public class Doctor {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getAvatar() {
+        return this.avatar;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getProfession() {
+        return this.profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
     }
 
     @Override
@@ -62,9 +91,11 @@ public class Doctor {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", phone=" + phone +
+                ", phoneNumber=" + phoneNumber +
                 ", email='" + email + '\'' +
-                ", role='" + role + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", profession='" + profession + '\'' +
+                ", latestPatients=" + latestPatients +
                 '}';
     }
 }

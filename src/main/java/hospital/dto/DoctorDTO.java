@@ -77,4 +77,7 @@ public class DoctorDTO {
                 ", role='" + role + '\'' +
                 '}';
     }
+
+    public void setProfession(String profession) {
+    }
 }
