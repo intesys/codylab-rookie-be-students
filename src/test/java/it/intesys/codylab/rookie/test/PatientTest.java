@@ -247,7 +247,6 @@ public class PatientTest {
         return objectMapper.readValue(response.getContentAsString(), PatientDTO.class);
     }
 
-
     @Test
     public void testGetPatient() throws Exception {
         List<DoctorDTO> doctors = createDoctors();
