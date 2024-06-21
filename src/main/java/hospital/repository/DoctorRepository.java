@@ -55,8 +55,8 @@ public class DoctorRepository extends CommonRepository {
     private Doctor getDoctor(Long id) {
         Doctor doctor = db.queryForObject("select * from doctor where id = ?", this::map, id);
         if (doctor != null) {
-            List<Patient> patients = patientRepository.findByDoctorId(id);
-            doctor.setPatients(patients);
+//            List<Patient> patients = patientRepository.findByDoctorId(id);
+//            doctor.setPatients(patients);
         }
         return doctor;
     }
