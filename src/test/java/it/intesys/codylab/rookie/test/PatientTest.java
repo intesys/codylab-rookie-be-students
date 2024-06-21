@@ -2,6 +2,8 @@ package it.intesys.codylab.rookie.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import it.intesys.rookielessons.App;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
@@ -31,7 +33,7 @@ public class PatientTest {
     public static final String AVATAR = "base64 image";
     public static final String EMAIL = "carlo.marchiori@intesys.it";
     public static final String NAME = "Carlo";
-    public static final Long PHONE_NUMBER = 6666666L;
+    public static final Long PHONE_NUMBER = 6666666666L;
     public static final String PROFESSION = "IT";
     public static final String SURNAME = "Marchiori";
     public static final PatientDTO.BloodGroupEnum BLOOD_GROUP = PatientDTO.BloodGroupEnum.A_MINUS;
@@ -44,7 +46,7 @@ public class PatientTest {
     public static final String AVATAR2 = "base64 image 2";
     public static final String EMAIL2 = "enrico.costanzi@intesys.it";
     public static final String NAME2 = "Enrico";
-    public static final Long PHONE_NUMBER2 = 7777777L;
+    public static final Long PHONE_NUMBER2 = 7777777777L;
     public static final String PROFESSION2 = "IT Architect";
     public static final String SURNAME2 = "Costanzi";
     public static final PatientDTO.BloodGroupEnum BLOOD_GROUP2 = PatientDTO.BloodGroupEnum.ZERO_PLUS;
@@ -54,7 +56,7 @@ public class PatientTest {
     public static final long OPD2 = 4L;
     @Autowired
     private WebApplicationContext applicationContext;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = JsonMapper.builder ().addModule(new JavaTimeModule()).build();
 
     private MockMvc mockMvc;
 
@@ -149,7 +151,8 @@ public class PatientTest {
                 .content(filter != null? objectMapper.writeValueAsString(filter): "")).andReturn().getResponse();
         assertEquals(response.getStatus(), 200);
 
-        return objectMapper.readValue(response.getContentAsString(), new TypeReference<List<PatientDTO>>(){});
+        List<PatientDTO> patients = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<PatientDTO>>(){});
+        return patients;
     }
 
     @Test
@@ -204,7 +207,7 @@ public class PatientTest {
     }
 
     @NotNull
-    private PatientDTO newPatient(List<DoctorDTO> doctors) {
+    public static PatientDTO newPatient(List<DoctorDTO> doctors) {
         PatientDTO patient = new PatientDTO();
         patient.setAddress(ADDRESS);
         patient.setAvatar(AVATAR);
@@ -222,7 +225,7 @@ public class PatientTest {
     }
 
     @NotNull
-    private PatientDTO newPatient2() {
+    public static PatientDTO newPatient2() {
         PatientDTO patient = new PatientDTO();
         patient.setAddress(ADDRESS2);
         patient.setAvatar(AVATAR2);
@@ -239,6 +242,10 @@ public class PatientTest {
     }
 
     private PatientDTO createPatient(PatientDTO patient) throws Exception {
+        return createPatient(patient, objectMapper, mockMvc);
+    }
+
+    public static PatientDTO createPatient(PatientDTO patient, ObjectMapper objectMapper, MockMvc mockMvc) throws Exception {
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/api/patient")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(patient))).andReturn().getResponse();
@@ -246,6 +253,7 @@ public class PatientTest {
 
         return objectMapper.readValue(response.getContentAsString(), PatientDTO.class);
     }
+
 
     @Test
     public void testGetPatient() throws Exception {
