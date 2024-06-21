@@ -1,5 +1,4 @@
 # Run as:
-# docker-compose -f src\main\resources\codylab-rookie\docker.yaml up
 version: "3.7"
 
 services:
