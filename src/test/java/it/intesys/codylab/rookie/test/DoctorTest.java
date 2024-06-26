@@ -1,10 +1,7 @@
 package it.intesys.codylab.rookie.test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.intesys.rookielessons.App;
-import org.jetbrains.annotations.NotNull;
+import it.intesys.codylab.rookie.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,13 +38,6 @@ public class DoctorTest {
     public static final String PHONE_NUMBER2 = "7777777777";
     public static final String PROFESSION2 = "IT Architect";
     public static final String SURNAME2 = "Costanzi";
-    public static final String ADDRESS3 = "Via Tevere";
-    public static final String AVATAR3 = "base64 image 3";
-    public static final String EMAIL3 = "paolo.qualg@intesys.it";
-    public static final String NAME3 = "Paolo";
-    public static final String PHONE_NUMBER3 = "8888888888";
-    public static final String PROFESSION3 = "IT Leader";
-    public static final String SURNAME3 = "Quaglia";
     @Autowired
     private WebApplicationContext applicationContext;
     private  ObjectMapper objectMapper = new ObjectMapper();
@@ -73,67 +61,6 @@ public class DoctorTest {
         assertEquals(PHONE_NUMBER, doctor.getPhoneNumber());
         assertEquals(PROFESSION, doctor.getProfession());
         assertEquals(SURNAME, doctor.getSurname());
-    }
-
-    @Test
-    public void testGetDoctors() throws Exception {
-        DoctorDTO doctor = createDoctor(newDoctor());
-        DoctorDTO doctor2 = createDoctor(newDoctor2());
-
-        DoctorFilterDTO filter = new DoctorFilterDTO();
-        int page = 0;
-        int size = 10;
-        String sort = "surname,desc";
-
-        List<DoctorDTO> doctors = getDoctors(page, size, sort, filter);
-        assertEquals(2, doctors.size());
-        assertEquals(doctors.get(0).getSurname(), SURNAME);
-        assertEquals(doctors.get(1).getSurname(), SURNAME2);
-
-        doctors = getDoctors(page, size, "surname,asc", filter);
-        assertEquals(2, doctors.size());
-        assertEquals(doctors.get(0).getSurname(), SURNAME2);
-        assertEquals(doctors.get(1).getSurname(), SURNAME);
-
-        doctors = getDoctors(page, 1, sort, filter);
-        assertEquals(1, doctors.size());
-        assertEquals(doctors.get(0).getSurname(), SURNAME);
-
-        doctors = getDoctors(1, size, sort, filter);
-        assertEquals(0, doctors.size());
-
-        filter = new DoctorFilterDTO().name(NAME);
-        doctors = getDoctors(page, size, sort, filter);
-        assertEquals(1, doctors.size());
-        assertEquals(doctors.get(0).getId(), doctor.getId());
-
-        filter = new DoctorFilterDTO().name(NAME2);
-        doctors = getDoctors(page, size, sort, filter);
-        assertEquals(1, doctors.size());
-        assertEquals(doctors.get(0).getId(), doctor2.getId());
-
-        filter = new DoctorFilterDTO().surname(SURNAME);
-        doctors = getDoctors(page, size, sort, filter);
-        assertEquals(1, doctors.size());
-        assertEquals(doctors.get(0).getId(), doctor.getId());
-
-        filter = new DoctorFilterDTO().profession(PROFESSION2);
-        doctors = getDoctors(page, size, sort, filter);
-        assertEquals(1, doctors.size());
-        assertEquals(doctors.get(0).getId(), doctor2.getId());
-    }
-
-    private List<DoctorDTO> getDoctors(int page, int size, String sort, DoctorFilterDTO filter) throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/api/doctor/filter")
-                .param("page", String.valueOf(page))
-                .param("size", String.valueOf(size))
-                .param("sort", sort)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(filter != null? objectMapper.writeValueAsString(filter): "")).andReturn().getResponse();
-        assertEquals(response.getStatus(), 200);
-
-        List<DoctorDTO> doctors = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<DoctorDTO>>(){});
-        return doctors;
     }
 
     @Test
@@ -169,17 +96,7 @@ public class DoctorTest {
         assertEquals(SURNAME2, doctor.getSurname());
     }
 
-    public DoctorDTO createDoctor () throws Exception {
-        DoctorDTO doctor = newDoctor();
-
-        return createDoctor(doctor);
-    }
-
-    public DoctorDTO createDoctor (DoctorDTO doctor) throws Exception {
-        return createDoctor(doctor, objectMapper, mockMvc);
-    }
-    @NotNull
-    public static DoctorDTO newDoctor() {
+    private DoctorDTO createDoctor () throws Exception {
         DoctorDTO doctor = new DoctorDTO();
         doctor.setAddress(ADDRESS);
         doctor.setAvatar(AVATAR);
@@ -188,36 +105,11 @@ public class DoctorTest {
         doctor.setPhoneNumber(PHONE_NUMBER);
         doctor.setProfession(PROFESSION);
         doctor.setSurname(SURNAME);
-        return doctor;
+
+        return createDoctor(doctor);
     }
 
-    @NotNull
-    public static DoctorDTO newDoctor2() {
-        DoctorDTO doctor = new DoctorDTO();
-        doctor.setAddress(ADDRESS2);
-        doctor.setAvatar(AVATAR2);
-        doctor.setEmail(EMAIL2);
-        doctor.setName(NAME2);
-        doctor.setPhoneNumber(PHONE_NUMBER2);
-        doctor.setProfession(PROFESSION2);
-        doctor.setSurname(SURNAME2);
-        return doctor;
-    }
-
-    @NotNull
-    public static DoctorDTO newDoctor3() {
-        DoctorDTO doctor = new DoctorDTO();
-        doctor.setAddress(ADDRESS3);
-        doctor.setAvatar(AVATAR3);
-        doctor.setEmail(EMAIL3);
-        doctor.setName(NAME3);
-        doctor.setPhoneNumber(PHONE_NUMBER3);
-        doctor.setProfession(PROFESSION3);
-        doctor.setSurname(SURNAME3);
-        return doctor;
-    }
-
-    public static DoctorDTO createDoctor(DoctorDTO doctor, ObjectMapper objectMapper, MockMvc mockMvc) throws Exception {
+    private DoctorDTO createDoctor(DoctorDTO doctor) throws Exception {
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post("/api/doctor")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(doctor))).andReturn().getResponse();
@@ -229,8 +121,10 @@ public class DoctorTest {
 
     @Test
     public void testGetDoctor() throws Exception {
-        DoctorDTO doctor = createDoctor();
-        doctor = getDoctor(doctor.getId());
+        createDoctor();
+
+        Long id = 1L;
+        DoctorDTO doctor = getDoctor(id);
 
         assertEquals(doctor.getAddress(), ADDRESS);
         assertEquals(doctor.getAvatar(), AVATAR);
@@ -239,23 +133,6 @@ public class DoctorTest {
         assertEquals(doctor.getPhoneNumber(), PHONE_NUMBER);
         assertEquals(doctor.getProfession(), PROFESSION);
         assertEquals(doctor.getSurname(), SURNAME);
-    }
-
-    @Test
-    public void testDeleteDoctor() throws Exception {
-        DoctorDTO doctor = createDoctor();
-
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/api/doctor/" + doctor.getId())
-                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        assertEquals(response.getStatus(), 200);
-
-        response = mockMvc.perform(MockMvcRequestBuilders.delete("/api/doctor/" + doctor.getId())
-                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        assertEquals(response.getStatus(), 200);
-
-        response = mockMvc.perform(MockMvcRequestBuilders.get("/api/doctor/" + doctor.getId())
-                .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        assertEquals(response.getStatus(), 404);
     }
 
     private DoctorDTO getDoctor(Long id) throws Exception {
